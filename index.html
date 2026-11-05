@@ -36,10 +36,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand h1{font-family:var(--f-display);font-weight:700;font-size:28px;letter-spacing:.02em;margin:0;text-transform:uppercase;line-height:1}
 .brand small{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
-.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
-.seg button{font:600 14px var(--f-body);padding:9px 6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-width:0}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.seg button{font:600 14px var(--f-body);padding:9px 4px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-width:0}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.seg button span{display:block;font:400 11px var(--f-body);opacity:.85}
+.seg button span{display:block;font:400 11px var(--f-body);opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 h2{font-family:var(--f-display);font-size:24px;text-transform:uppercase;letter-spacing:.03em;margin:22px 0 4px}
 .sub{color:var(--muted);margin:0 0 14px;font-size:13px}
@@ -253,7 +253,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
     <div class="card">
       <h3>Mulai dalam 3 langkah</h3>
       <ol style="margin:8px 0 0;padding-left:20px;display:grid;gap:6px">
-        <li>Pilih peran di bagian atas: SPV CSA, SPV MEP, atau QC.</li>
+        <li>Pilih peran di bagian atas: SPV CSA, SPV MEP, QC, atau HSE.</li>
         <li>Buka pekerjaan yang sedang berjalan, misalnya Pembesian atau Instalasi piping.</li>
         <li>Ikuti urutan Sebelum kerja, Saat kerja, Setelah kerja, lalu centang tiap langkah yang sudah dikerjakan.</li>
       </ol>
@@ -308,6 +308,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
         <dt>SPV CSA</dt><dd>Mengawasi pekerjaan sipil, struktur, dan arsitektur, serta mengajukan RFI ke QC saat hold point.</dd>
         <dt>SPV MEP</dt><dd>Mengawasi listrik, tata udara, plumbing, piping, dan proteksi kebakaran, serta menjadwalkan uji dan T&amp;C.</dd>
         <dt>QC</dt><dd>Memeriksa dan menyetujui hold point, menguji material dan beton, menerbitkan dan menutup NCR.</dd>
+        <dt>HSE</dt><dd>Memantau keselamatan, kesehatan, dan lingkungan: APD, alat, area kerja, kebersihan, dan izin kerja. Menghentikan pekerjaan bila ada bahaya langsung.</dd>
       </dl>
       <p class="sub" style="margin:10px 0 0">Sesuaikan dengan struktur organisasi proyek bila berbeda.</p>
     </div>
@@ -333,6 +334,15 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
         <dt>WPS</dt><dd>Prosedur pengelasan.</dd>
         <dt>T&amp;C</dt><dd>Testing and commissioning, uji dan penyerahan operasi sistem MEP.</dd>
         <dt>SMKK</dt><dd>Sistem manajemen keselamatan konstruksi.</dd>
+        <dt>HSE</dt><dd>Health, Safety, Environment: kesehatan, keselamatan, dan lingkungan kerja.</dd>
+        <dt>APD</dt><dd>Alat pelindung diri, misalnya helm, sepatu, rompi, kacamata, harness.</dd>
+        <dt>APAR</dt><dd>Alat pemadam api ringan.</dd>
+        <dt>LOTO</dt><dd>Lock out tag out: instalasi dikunci dan diberi tanda agar tidak dihidupkan saat dikerjakan.</dd>
+        <dt>SILO / SIO</dt><dd>Sertifikat laik operasi alat, dan surat izin operator.</dd>
+        <dt>Izin kerja</dt><dd>Persetujuan tertulis sebelum pekerjaan berisiko tinggi, misalnya ketinggian, panas, galian, ruang terbatas.</dd>
+        <dt>Near miss</dt><dd>Kejadian nyaris celaka tanpa korban, tetap dicatat.</dd>
+        <dt>B3</dt><dd>Bahan berbahaya dan beracun, misalnya oli bekas dan sisa cat.</dd>
+        <dt>P3K</dt><dd>Pertolongan pertama pada kecelakaan.</dd>
         <dt>f'c</dt><dd>Kuat tekan beton yang direncanakan, dalam MPa.</dd>
       </dl>
     </div>
@@ -557,6 +567,122 @@ mep:{label:'SPV MEP',sub:'Mekanikal · Elektrikal · Plumbing',jobs:[
   'A|As-built drawing, manual O&M, dan sertifikat uji diserahkan',
   'A|Pelatihan operator bila disyaratkan kontrak']}
 ]},
+hse:{label:'HSE',sub:'Health · Safety · Environment',jobs:[
+ {id:'h0',name:'Inspeksi harian dan pelaporan HSE',std:['Permen PUPR 10/2021 (SMKK)','ISO 45001:2018 klausul 9.1 dan 10.2'],s:[
+  'P|Jadwal inspeksi harian per area dan daftar periksa disiapkan',
+  'P|Temuan hari sebelumnya yang belum selesai ditinjau',
+  'S|Inspeksi keliling tiap area: APD, alat, area kerja, kebersihan, izin kerja',
+  'S|Temuan dicatat dengan lokasi dan tingkat (rendah, sedang, kritis)',
+  'S!|Bahaya kritis yang mengancam jiwa: pekerjaan dihentikan sampai bahaya dikendalikan',
+  'A|Laporan harian HSE disusun: jumlah pekerja, jam kerja, temuan, tindakan',
+  'A|Tindak lanjut temuan lama diverifikasi dan ditutup',
+  'A|Temuan berulang dinaikkan menjadi NCR']},
+ {id:'h1',name:'Induksi dan kompetensi pekerja',std:['PP 50/2012 (SMK3)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Pekerja baru terdaftar dan identitasnya diverifikasi',
+  'P|Induksi K3 proyek diberikan sebelum masuk area kerja',
+  'S!|Tidak ada pekerja masuk area kerja tanpa induksi dan tanda pengenal proyek',
+  'S|Sertifikat kompetensi operator dan juru las dicek sesuai pekerjaannya',
+  'S|Toolbox meeting harian dilaksanakan dengan daftar hadir',
+  'A|Rekap jumlah pekerja, jam kerja, dan induksi hari ini dicatat']},
+ {id:'h2',name:'Alat pelindung diri (APD)',std:['Permenaker 8/2010 (APD)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Stok APD cukup dan layak: helm, rompi, sepatu, kacamata, sarung tangan, pelindung telinga, masker',
+  'S!|Semua pekerja dan tamu memakai APD dasar sebelum masuk area: helm, sepatu keselamatan, rompi',
+  'S|APD tambahan sesuai bahaya: kacamata las, masker, pelindung telinga, sarung tangan',
+  'S|Kerja di ketinggian memakai full body harness yang dikaitkan ke titik jangkar',
+  'S|APD rusak atau kedaluwarsa diganti, tidak dipakai ulang',
+  'A|Pelanggaran APD dicatat dengan nama pekerja dan tindak lanjutnya']},
+ {id:'h3',name:'Area kerja, rambu, dan akses',std:['Permen PUPR 10/2021 (SMKK)','Permenaker 1/1980 (K3 konstruksi bangunan)'],s:[
+  'P|Area kerja dipagari dan diberi batas yang jelas',
+  'P|Rambu keselamatan terpasang di pintu masuk dan area berbahaya',
+  'P|Jalur akses, jalur evakuasi, dan titik kumpul ditetapkan dan bebas hambatan',
+  'S|Lubang, bukaan lantai, dan tepi galian ditutup atau dipagari',
+  'S|Pemisahan jalur pejalan kaki dan kendaraan proyek',
+  'S|Penerangan area kerja memadai, termasuk kerja malam (nilai: Permenaker 5/2018 atau spek)',
+  'A!|Area yang ditinggalkan tidak boleh membahayakan: pagar dan penutup terpasang',
+  'A|Hasil inspeksi area dicatat dengan foto']},
+ {id:'h4',name:'Kebersihan dan housekeeping',std:['Permenaker 5/2018 (K3 lingkungan kerja)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Tempat sampah terpilah dan area penyimpanan material ditetapkan',
+  'S|Material tersusun rapi, tidak menghalangi jalur kerja dan evakuasi',
+  'S|Sisa material, paku, dan kawat tidak berserakan',
+  'S|Kabel digulung atau digantung, tidak melintang di jalur jalan',
+  'S|Tumpahan oli atau air dibersihkan agar lantai tidak licin',
+  'S|Sampah diangkut berkala, tidak menumpuk di area kerja',
+  'A!|Kebersihan akhir hari diperiksa sebelum pekerja pulang',
+  'A|Penilaian kebersihan tiap area dicatat (baik atau perlu perbaikan)']},
+ {id:'h5',name:'Kerja di ketinggian dan perancah',std:['Permenaker 9/2016 (kerja di ketinggian)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Izin kerja di ketinggian disetujui sebelum pekerjaan dimulai',
+  'P|Pekerja kompeten dan dinyatakan sehat untuk kerja di ketinggian',
+  'P|Perancah dirakit oleh orang kompeten',
+  'S!|Perancah diinspeksi dan diberi tanda layak pakai sebelum digunakan',
+  'S|Pagar pengaman, toe board, dan tangga akses terpasang',
+  'S|Harness dikaitkan pada titik jangkar yang kuat',
+  'S|Alat dan material di ketinggian diikat agar tidak jatuh',
+  'A|Perancah diperiksa ulang setelah hujan atau angin kencang',
+  'A|Perancah tidak dibongkar atau diubah tanpa izin']},
+ {id:'h6',name:'Alat angkat dan alat berat',std:['Permenaker 5/1985 (pesawat angkat dan angkut)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Sertifikat laik operasi (SILO) alat dan SIO operator tersedia dan berlaku',
+  'P|Tali sling, shackle, dan alat bantu angkat diperiksa dan bertanda layak',
+  'P|Rencana angkat (lifting plan) disusun untuk beban kritis',
+  'S!|Alat angkat dan alat berat hanya beroperasi dengan SILO dan SIO yang berlaku',
+  'S|Area angkat dibatasi dan ada pemandu sinyal (signalman)',
+  'S|Beban tidak diangkat melewati pekerja',
+  'S|Rem, klakson mundur, dan lampu alat berat berfungsi',
+  'A|Alat diparkir di area aman, bucket diturunkan, rem terpasang',
+  'A|Hasil inspeksi harian alat dicatat']},
+ {id:'h7',name:'Alat kerja dan perkakas',std:['Permenaker 12/2015 (K3 listrik)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Perkakas listrik dan alat tangan diperiksa: kabel, steker, pelindung',
+  'P|Panel sementara memiliki pengaman arus bocor dan grounding',
+  'S!|Peralatan rusak diberi tanda dilarang dipakai dan dikeluarkan dari area',
+  'S|Gerinda, gergaji, dan mesin las memakai pelindung (guard) terpasang',
+  'S|Tabung gas disimpan tegak, terikat, tertutup, dan jauh dari sumber panas',
+  'A|Alat dibersihkan dan disimpan rapi di tempatnya',
+  'A|Alat yang diperbaiki diperiksa lagi sebelum dikembalikan ke area']},
+ {id:'h8',name:'Pekerjaan panas dan pemadam api',std:['Permenaker 4/1980 (APAR)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Izin kerja panas diterbitkan sebelum pengelasan atau pemotongan',
+  'P|Area dibersihkan dari bahan mudah terbakar, bahan yang tidak bisa dipindah ditutup',
+  'P|APAR tersedia di dekat lokasi, tekanan dan segelnya masih baik',
+  'S!|Petugas pengawas api hadir selama pekerjaan panas',
+  'S|Percikan dibatasi dengan selimut api atau penutup',
+  'A|Pengawasan api dilanjutkan setelah pekerjaan selesai sesuai izin kerja',
+  'A|APAR, jalur evakuasi, dan titik kumpul diperiksa rutin dan dicatat']},
+ {id:'h9',name:'Galian dan ruang terbatas',std:['Permen PUPR 10/2021 (SMKK)','Permenaker 1/1980 (K3 konstruksi bangunan)'],s:[
+  'P|Izin kerja galian atau ruang terbatas disetujui',
+  'P|Utilitas bawah tanah teridentifikasi dan ditandai',
+  'S!|Galian dalam diberi penahan lereng atau perkuatan, akses keluar masuk tersedia',
+  'S|Tanah galian ditumpuk jauh dari tepi galian',
+  'S|Ruang terbatas: kadar gas diuji dan ventilasi tersedia, ada penjaga di luar',
+  'A|Galian ditutup atau dipagari saat ditinggalkan',
+  'A|Genangan dipompa dan lereng diperiksa setelah hujan']},
+ {id:'h10',name:'Listrik sementara dan penguncian (LOTO)',std:['Permenaker 12/2015 (K3 listrik)','PUIL 2011 (SNI 0225:2011)'],s:[
+  'P|Panel sementara terkunci, berlabel, dan ber-grounding',
+  'P|Pekerjaan pada instalasi listrik memakai prosedur penguncian dan penandaan (LOTO)',
+  'S!|Instalasi diputus, dikunci, dan diberi tanda sebelum perbaikan listrik',
+  'S|Tegangan nol dipastikan dengan alat uji sebelum pekerja menyentuh',
+  'S|Kabel dan sambungan sementara tidak terendam air',
+  'A|Kunci dan tanda dilepas oleh pemasangnya setelah pekerjaan aman']},
+ {id:'h11',name:'Kesehatan kerja dan P3K',std:['Permenaker 5/2018 (K3 lingkungan kerja)','Permenakertrans 15/2008 (P3K)'],s:[
+  'P|Kotak P3K lengkap dan isinya belum kedaluwarsa',
+  'P|Petugas P3K ditunjuk dan nomor darurat dipajang',
+  'S|Air minum, toilet, dan tempat istirahat tersedia dan bersih',
+  'S|Paparan bising, debu, dan panas dipantau (nilai ambang: Permenaker 5/2018)',
+  'S|Pekerja yang tidak sehat tidak ditugaskan pada pekerjaan berisiko',
+  'A|Kecelakaan dan sakit akibat kerja dicatat dan dilaporkan',
+  'A|Statistik jam kerja dan kejadian diperbarui']},
+ {id:'h12',name:'Limbah dan lingkungan',std:['PP 22/2021 (pengelolaan limbah B3)','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Tempat penyimpanan sementara limbah B3 (oli bekas, cat, majun) berlabel dan beralas',
+  'S|Limbah B3 dipisah dari sampah biasa dan tidak dibuang ke saluran',
+  'S|Debu dikendalikan dengan penyiraman atau penutup',
+  'S|Tumpahan oli atau bahan kimia dibersihkan dengan kit tumpahan',
+  'A|Limbah B3 diserahkan ke pihak berizin dengan manifes',
+  'A|Catatan volume limbah disimpan']},
+ {id:'h13',name:'Tanggap darurat dan insiden',std:['Permen PUPR 10/2021 (SMKK)','ISO 45001:2018 klausul 8.2 dan 10.2'],s:[
+  'P|Rencana tanggap darurat dan peta evakuasi dipasang',
+  'P|Tim tanggap darurat ditunjuk dan nomor darurat dipajang',
+  'S|Latihan evakuasi dilakukan sesuai jadwal',
+  'S|Alarm dan titik kumpul diperiksa berfungsi',
+  'A!|Insiden dan nyaris celaka dilaporkan segera, penyebab diselidiki',
+  'A|Tindakan korektif dicatat sebagai NCR dan dibahas di toolbox meeting']}
+]},
 qc:{label:'QC',sub:'Quality Control',jobs:[
  {id:'q1',name:'Inspeksi material masuk (MIR)',std:['Submittal yang disetujui','Sertifikat pabrik dan hasil uji'],s:[
   'P|Material dicocokkan dengan submittal atau material approval',
@@ -598,13 +724,6 @@ qc:{label:'QC',sub:'Quality Control',jobs:[
   'S|Akar masalah, tindakan korektif, dan tindakan pencegahan ditetapkan',
   'A|Tindakan diverifikasi dan NCR ditutup dengan persetujuan QC dan PM',
   'A|Rekap NCR mingguan dibawa ke rapat mutu']},
- {id:'q7',name:'K3 konstruksi di lapangan',std:['Permen PUPR 10/2021 (SMKK)'],s:[
-  'P|Izin kerja berisiko tinggi (ketinggian, galian, listrik, angkat) tersedia',
-  'S|APD lengkap, area kerja berpagar dan bertanda',
-  'S|Perancah, tangga, dan alat angkat diperiksa dan bertanda layak',
-  'S|Toolbox meeting harian tercatat',
-  'A!|Temuan K3 dilaporkan dan ditindak sebelum pekerjaan dilanjutkan',
-  'A|Insiden dan near miss dicatat serta dilaporkan sesuai prosedur']},
  {id:'q8',name:'Serah terima dan punch list',std:['Kontrak','UU 2/2017 tentang Jasa Konstruksi'],s:[
   'P|SPV menyatakan pekerjaan selesai dan mengajukan inspeksi ke QC',
   'S|Inspeksi bersama internal (QC, PM, SPV) per area dan sistem',
@@ -613,7 +732,7 @@ qc:{label:'QC',sub:'Quality Control',jobs:[
   'A|As-built, manual, sertifikat uji, dan garansi lengkap',
   'A|Masa pemeliharaan dan serah terima akhir sesuai kontrak']}
 ]}};
-const ROLES=['csa','mep','qc'];
+const ROLES=['csa','mep','qc','hse'];
 const PH={P:'Sebelum kerja',S:'Saat kerja',A:'Setelah kerja'};
 const KEY='siteguide-ckd-v1';
 const DEF={project:'Batik Project - Safran',contractor:'PT Citra Karsa Dinamika',area:'',user:''};
@@ -813,6 +932,7 @@ const QZ=[
  {q:"Slump truk ketiga berada di luar batas spesifikasi. Apa tindakannya?",o:["Tolak truk, catat hasilnya, dan jangan dicor","Tambahkan air di lokasi lalu cor","Cor di area yang tidak struktural"],a:0,e:"Beton di luar batas spesifikasi ditolak. Menambah air di lokasi mengubah kualitas beton."},
  {q:"Rata-rata tiga hasil uji tekan berturut-turut lebih rendah dari f'c. Apa yang dilakukan?",o:["Mengubah f'c rencana agar hasil lolos","Menunggu beberapa hari lalu menguji ulang tanpa melapor","Mengevaluasi di tab Alat uji, menerbitkan NCR, dan mengajukan uji lanjutan ke PM"],a:2,e:"Hasil di bawah kriteria SNI 2847:2019 berarti tidak memenuhi. Laporkan lewat NCR dan ajukan uji lanjutan (core drill atau NDT) ke PM."},
  {q:"Hollow test menemukan keramik berongga di area basah. Apa yang paling tepat?",o:["Menutup dengan nat agar tidak terlihat","Mengabaikan karena areanya kecil","Mencatat NCR dengan lokasi dan tingkat temuan, memperbaiki, lalu uji ulang"],a:2,e:"Temuan dicatat agar bisa dilacak sampai tutup, dan perbaikan harus diuji ulang."},
+ {q:"Perancah baru dirakit dan belum ada tanda layak pakai, tetapi pekerja ingin langsung naik. Apa tindakan HSE?",o:["Mengizinkan asal memakai harness","Menahan pekerjaan sampai perancah diinspeksi dan diberi tanda layak pakai","Menunggu sampai sore lalu memeriksa"],a:1,e:"Inspeksi perancah adalah hold point. Pekerjaan di atasnya tidak boleh mulai sebelum perancah dinyatakan layak."},
  {q:"Di mana data checklist dan NCR Anda disimpan?",o:["Di server pusat yang bisa dilihat semua orang","Di browser perangkat ini saja, jadi laporan perlu disalin dan dikirim","Di akun email Anda"],a:1,e:"Tidak ada sinkronisasi. Pakai Salin laporan di tab Rekap untuk berbagi, dan jangan hapus data browser."}
 ];
 let qa=QZ.map(()=>null);
