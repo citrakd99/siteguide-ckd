@@ -764,9 +764,12 @@ const scopeNcr=()=>S.role==='qc'?S.ncr:S.ncr.filter(n=>{const j=allJobs().find(x
 function report(){
   const d=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   let t=`LAPORAN HARIAN SITEGUIDE\n${d}\nProyek: ${S.meta.project||'-'}\nKontraktor: ${S.meta.contractor||'-'}\nArea: ${S.meta.area||'-'}\nDisusun oleh: ${S.meta.user||'-'} (${R[S.role].label})\n`;
-  [S.role].forEach(r=>{t+=`\nCakupan: ${R[r].label} (${R[r].sub})\n`;R[r].jobs.forEach(j=>{const st=jobStats(j);t+=`- ${j.name}: ${st.d}/${st.n}${st.hpOpen?` | hold point belum: ${st.hpOpen}`:''}\n`})});
+  /* Hanya langkah yang dicentang. Pekerjaan tanpa centang tidak dimasukkan. */
+  t+=`\nCakupan: ${R[S.role].label} (${R[S.role].sub})\n`;let any=false;
+  R[S.role].jobs.forEach(j=>{const c=S.checks[j.id]||{};const done=j.s.map(parse).filter(p=>c[hk(p.t)]);if(!done.length)return;any=true;const st=jobStats(j);t+=`\n${j.name} (${st.d}/${st.n})\n`;done.forEach(p=>{t+=`- ${p.t}${p.hp?' [HOLD POINT]':''}\n`})});
+  if(!any)t+='\nBelum ada langkah yang dicentang.\n';
   const sn=scopeNcr(),open=sn.filter(n=>n.status!=='Tutup');
-  t+=`\nNCR terbuka${S.role==='qc'?' (semua peran)':''}: ${open.length} dari ${sn.length}\n`;open.forEach(n=>{t+=`- ${n.no} [${n.level}] ${n.area}: ${n.desc}\n`});
+  if(open.length)t+=`\nNCR terbuka${S.role==='qc'?' (semua peran)':''}: ${open.length}\n`;open.forEach(n=>{t+=`- ${n.no} [${n.level}] ${n.area}: ${n.desc}\n`});
   return t;
 }
 function renderRekap(){
