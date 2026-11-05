@@ -264,7 +264,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
       <ol class="stepper">
         <li><b>Siapkan dokumen dan material</b><span>Cek gambar kerja, submittal yang disetujui, dan material yang sudah lolos inspeksi masuk (MIR).</span></li>
         <li><b>Kerjakan sesuai gambar</b><span>Ikuti langkah "Saat kerja", centang yang selesai, dan tulis temuan di kolom catatan.</span></li>
-        <li class="hps"><b>Hold point: ajukan RFI</b><span>Pekerjaan berhenti. QC dan MK memeriksa lalu memberi persetujuan tertulis. Tanpa itu, pekerjaan berikutnya tidak boleh mulai.</span></li>
+        <li class="hps"><b>Hold point: ajukan RFI</b><span>Pekerjaan berhenti. QC internal memeriksa lalu memberi persetujuan tertulis. Tanpa itu, pekerjaan berikutnya tidak boleh mulai.</span></li>
         <li><b>Lanjutkan dan selesaikan</b><span>Setelah disetujui, teruskan sampai langkah "Setelah kerja": uji, perbaikan, dan dokumentasi.</span></li>
         <li><b>Ada yang tidak sesuai? Terbitkan NCR</b><span>Catat lokasi, uraian, dan tindakan korektif di tab NCR. Ubah statusnya sampai Tutup.</span></li>
         <li><b>Laporkan</b><span>Tab Rekap menampilkan progres pekerjaan sesuai peran yang dipilih di atas. Salin laporan lalu kirim ke grup.</span></li>
@@ -273,10 +273,10 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
 
     <div class="card">
       <h3>Dua jenis langkah</h3>
-      <p class="sub" style="margin:0">Langkah biasa cukup dicentang saat selesai. Langkah bergaris kuning wajib disetujui QC dan MK sebelum pekerjaan berikutnya. Lencana HP di daftar pekerjaan menunjukkan jumlah hold point yang belum dicentang.</p>
+      <p class="sub" style="margin:0">Langkah biasa cukup dicentang saat selesai. Langkah bergaris kuning wajib disetujui QC internal sebelum pekerjaan berikutnya. Lencana HP di daftar pekerjaan menunjukkan jumlah hold point yang belum dicentang.</p>
       <div class="demo">
         <label class="step"><input type="checkbox" disabled><span class="st">Langkah biasa: bekisting rapat dan tidak bocor</span></label>
-        <label class="step hp"><input type="checkbox" disabled><span class="st">Inspeksi pembesian oleh QC dan MK sebelum cor<span class="tag">HOLD POINT</span></span></label>
+        <label class="step hp"><input type="checkbox" disabled><span class="st">Inspeksi pembesian oleh QC sebelum cor<span class="tag">HOLD POINT</span></span></label>
       </div>
     </div>
 
@@ -293,7 +293,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
     <div class="card">
       <h3>Contoh alur: pengecoran kolom</h3>
       <ol class="stepper">
-        <li class="hps"><b>Pembesian selesai dan disetujui</b><span>QC dan MK memeriksa diameter, jarak sengkang, dan selimut beton.</span></li>
+        <li class="hps"><b>Pembesian selesai dan disetujui</b><span>QC memeriksa diameter, jarak sengkang, dan selimut beton.</span></li>
         <li><b>Bekisting selesai</b><span>Kelurusan dan elevasi diukur, bagian dalam dibersihkan.</span></li>
         <li class="hps"><b>Izin cor ditandatangani</b><span>Tanpa izin tertulis QC, truk mixer tidak boleh dipanggil.</span></li>
         <li><b>Beton tiba</b><span>Cek surat jalan, lalu uji slump. Di luar batas spesifikasi berarti truk ditolak.</span></li>
@@ -305,7 +305,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
     <div class="card">
       <h3>Pembagian peran umum</h3>
       <dl class="gl">
-        <dt>SPV CSA</dt><dd>Mengawasi pekerjaan sipil, struktur, dan arsitektur, serta mengajukan RFI saat hold point.</dd>
+        <dt>SPV CSA</dt><dd>Mengawasi pekerjaan sipil, struktur, dan arsitektur, serta mengajukan RFI ke QC saat hold point.</dd>
         <dt>SPV MEP</dt><dd>Mengawasi listrik, tata udara, plumbing, piping, dan proteksi kebakaran, serta menjadwalkan uji dan T&amp;C.</dd>
         <dt>QC</dt><dd>Memeriksa dan menyetujui hold point, menguji material dan beton, menerbitkan dan menutup NCR.</dd>
       </dl>
@@ -319,11 +319,11 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
       <h3>Istilah</h3>
       <dl class="gl">
         <dt>Hold point (HP)</dt><dd>Titik berhenti. Pekerjaan berikutnya baru boleh mulai setelah persetujuan tertulis.</dd>
-        <dt>Witness point (WP)</dt><dd>Pemeriksaan yang disaksikan MK atau pemilik. Pekerjaan boleh lanjut bila yang diundang tidak hadir, dengan catatan.</dd>
-        <dt>RFI</dt><dd>Di aplikasi ini berarti Request for Inspection: permintaan inspeksi sebelum pekerjaan ditutup.</dd>
+        <dt>Witness point (WP)</dt><dd>Pemeriksaan yang disaksikan PM atau pihak lain yang diundang. Pekerjaan boleh lanjut bila yang diundang tidak hadir, dengan catatan.</dd>
+        <dt>RFI</dt><dd>Di aplikasi ini berarti Request for Inspection internal: permintaan inspeksi dari SPV ke QC internal CKD sebelum pekerjaan ditutup.</dd>
         <dt>MIR</dt><dd>Inspeksi material masuk.</dd>
         <dt>NCR</dt><dd>Non-Conformance Report, laporan ketidaksesuaian terhadap gambar, spesifikasi, atau standar.</dd>
-        <dt>MK</dt><dd>Manajemen konstruksi atau konsultan pengawas.</dd>
+        <dt>QC internal</dt><dd>Tim QC CKD yang memeriksa dan menyetujui hold point. Bukan pihak luar.</dd>
         <dt>Submittal</dt><dd>Dokumen material atau metode kerja yang diajukan untuk disetujui sebelum dipakai.</dd>
         <dt>Punch list</dt><dd>Daftar perbaikan kecil yang harus selesai sebelum serah terima.</dd>
         <dt>PHO / FHO</dt><dd>Serah terima pertama dan serah terima akhir setelah masa pemeliharaan.</dd>
@@ -375,7 +375,7 @@ csa:{label:'SPV CSA',sub:'Sipil · Struktur · Arsitektur',jobs:[
   'P|Posisi dan elevasi pondasi dicocokkan dengan gambar dan hasil survei',
   'P|Lantai kerja (lean concrete) selesai dan bersih',
   'S|Pembesian dan bekisting sesuai gambar (ikuti checklist Pembesian dan Bekisting)',
-  'S!|RFI diajukan ke QC dan MK, persetujuan tertulis sebelum pengecoran',
+  'S!|RFI diajukan ke QC, persetujuan tertulis sebelum pengecoran',
   'S|Pengecoran mengikuti checklist Pengecoran beton',
   'A|Posisi stek kolom (as dan ketinggian) dicek setelah cor',
   'A|Deviasi as pondasi dicatat, lapor bila di luar toleransi spesifikasi']},
@@ -387,7 +387,7 @@ csa:{label:'SPV CSA',sub:'Sipil · Struktur · Arsitektur',jobs:[
   'S|Panjang lewatan, panjang penyaluran, dan kait sesuai detail gambar',
   'S|Jarak sengkang di daerah tumpuan dan lapangan sesuai gambar',
   'S|Beton decking terpasang sesuai tebal selimut (lihat tabel di Alat uji)',
-  'A!|Inspeksi pembesian oleh QC dan MK sebelum bekisting ditutup dan sebelum cor',
+  'A!|Inspeksi pembesian oleh QC sebelum bekisting ditutup dan sebelum cor',
   'A|Tulangan dijaga tidak bergeser selama pengecoran']},
  {id:'c4',name:'Bekisting dan perancah',std:['SNI 2847:2019','Permen PUPR 10/2021 (SMKK)'],s:[
   'P|Gambar bekisting atau perancah disetujui bila diwajibkan spesifikasi',
@@ -434,7 +434,7 @@ csa:{label:'SPV CSA',sub:'Sipil · Struktur · Arsitektur',jobs:[
   'P|Pipa tembus (drain, sleeve) sudah terpasang dan diberi detail penutup',
   'S|Primer dan lapisan sesuai jumlah, tebal, dan waktu antar lapis pabrikan',
   'S|Lapisan naik ke dinding sesuai tinggi di gambar',
-  'A!|Flood test: durasi dan tinggi air sesuai spesifikasi, disaksikan QC dan MK',
+  'A!|Flood test: durasi dan tinggi air sesuai spesifikasi, disaksikan QC',
   'A|Screed pelindung hanya setelah lulus flood test',
   'A|Hasil uji dan foto dicatat']},
  {id:'c9',name:'Lantai dan keramik',std:['Spesifikasi teknis','Rekomendasi pabrikan'],s:[
@@ -520,7 +520,7 @@ mep:{label:'SPV MEP',sub:'Mekanikal · Elektrikal · Plumbing',jobs:[
   'P|Titik sprinkler, hidran, dan detektor sesuai gambar dan koordinasi plafon',
   'S|Posisi kepala sprinkler dan detektor sesuai gambar yang disetujui',
   'S|Pipa: penyangga dan katup sesuai gambar, label sesuai spesifikasi',
-  'A!|Uji hidrostatik pipa sebelum ditutup, disaksikan MK (nilai: spek proyek)',
+  'A!|Uji hidrostatik pipa sebelum ditutup, disaksikan QC (nilai: spek proyek)',
   'A|Uji fungsi alarm, pompa, dan panel dicatat dalam berita acara',
   'A|Sertifikat laik fungsi proteksi kebakaran diurus sesuai peraturan setempat']},
  {id:'m6',name:'Proteksi petir dan grounding',std:['SNI 03-7015-2004','PUIL 2011 (SNI 0225:2011)'],s:[
@@ -545,14 +545,14 @@ mep:{label:'SPV MEP',sub:'Mekanikal · Elektrikal · Plumbing',jobs:[
   'S|Valve terpasang dengan arah aliran benar dan mudah dioperasikan',
   'S!|Inspeksi visual las dan NDT sebelum uji tekan (persentase: spek proyek)',
   'S|Sleeve tembusan dinding atau lantai diberi sealing dan fire stopping',
-  'A!|Hydrotest sebelum isolasi dan pengecatan: tekanan dan durasi sesuai spesifikasi, disaksikan MK',
+  'A!|Hydrotest sebelum isolasi dan pengecatan: tekanan dan durasi sesuai spesifikasi, disaksikan QC',
   'A|Flushing dan pembersihan sistem sebelum dioperasikan',
   'A|Isolasi, label, dan arah aliran dipasang sesuai spesifikasi',
   'A|As-built dan berita acara uji disusun']},
  {id:'m8',name:'Testing dan commissioning',std:['Spesifikasi teknis','Kontrak'],s:[
-  'P|Daftar uji T&C per sistem disepakati dengan MK dan pemilik',
+  'P|Daftar uji T&C per sistem disepakati dengan QC dan PM',
   'P|Semua instalasi selesai sesuai checklist per sistem',
-  'S!|Pelaksanaan T&C disaksikan MK atau pemilik, hasil ditandatangani',
+  'S!|Pelaksanaan T&C disaksikan QC dan PM, hasil ditandatangani',
   'S|Temuan dicatat sebagai punch list, NCR bila perlu',
   'A|As-built drawing, manual O&M, dan sertifikat uji diserahkan',
   'A|Pelatihan operator bila disyaratkan kontrak']}
@@ -567,20 +567,20 @@ qc:{label:'QC',sub:'Quality Control',jobs:[
   'A|Material ditolak dikeluarkan dari area kerja dan dicatat',
   'A|Sampel uji diambil untuk material yang disyaratkan (frekuensi: spek proyek)']},
  {id:'q2',name:'RFI dan hold / witness point',std:['Prosedur mutu proyek','Checklist pekerjaan terkait'],s:[
-  'P|Kontraktor mengajukan RFI tertulis sebelum pekerjaan ditutup',
+  'P|SPV mengajukan RFI internal tertulis ke QC sebelum pekerjaan ditutup',
   'S|QC memeriksa terhadap gambar kerja dan checklist pekerjaan',
   'S!|Hold point: pekerjaan berikutnya tidak dimulai sebelum persetujuan tertulis',
-  'S|Witness point: MK dan pemilik diundang, ketidakhadiran dicatat',
+  'S|Witness point: PM diundang, ketidakhadiran dicatat',
   'A|Hasil RFI: disetujui, disetujui dengan catatan, atau ditolak, lengkap tanda tangan dan tanggal',
   'A|RFI diarsipkan per pekerjaan dan area']},
  {id:'q3',name:'Uji beton',std:['SNI 1972:2008 (slump)','SNI 4810:2013 (benda uji lapangan)','SNI 2493:2011 (benda uji lab)','SNI 1974:2011 (kuat tekan)','SNI 2847:2019'],s:[
-  'P|Laboratorium disetujui MK dan alat uji terkalibrasi',
+  'P|Laboratorium ditetapkan PM dan alat uji terkalibrasi',
   'S|Slump diuji dan dicatat per truk atau per sampel',
   'S|Silinder diberi label: tanggal, lokasi, mutu, nomor truk',
   'S|Perawatan awal benda uji sesuai standar',
   'A|Uji tekan pada umur yang ditetapkan spesifikasi',
   'A!|Hasil dievaluasi dengan kalkulator Evaluasi kuat tekan, tidak lulus berarti NCR',
-  'A|Bila tidak lulus, usulkan uji lanjutan (core drill atau NDT) ke MK sesuai SNI 2847:2019']},
+  'A|Bila tidak lulus, usulkan uji lanjutan (core drill atau NDT) ke PM sesuai SNI 2847:2019']},
  {id:'q4',name:'Uji tarik baja tulangan',std:['SNI 2052:2017'],s:[
   'P|Sampel diambil dari tiap diameter dan batch (frekuensi: spek proyek)',
   'S|Sampel diberi label dan pemotongan disaksikan QC',
@@ -596,7 +596,7 @@ qc:{label:'QC',sub:'Quality Control',jobs:[
   'S|Lokasi, foto bukti, dan tingkat (minor, mayor, kritis) dicatat',
   'S!|Mayor atau kritis: pekerjaan terkait dihentikan sampai ada disposisi',
   'S|Akar masalah, tindakan korektif, dan tindakan pencegahan ditetapkan',
-  'A|Tindakan diverifikasi dan NCR ditutup dengan persetujuan MK',
+  'A|Tindakan diverifikasi dan NCR ditutup dengan persetujuan QC dan PM',
   'A|Rekap NCR mingguan dibawa ke rapat mutu']},
  {id:'q7',name:'K3 konstruksi di lapangan',std:['Permen PUPR 10/2021 (SMKK)'],s:[
   'P|Izin kerja berisiko tinggi (ketinggian, galian, listrik, angkat) tersedia',
@@ -606,8 +606,8 @@ qc:{label:'QC',sub:'Quality Control',jobs:[
   'A!|Temuan K3 dilaporkan dan ditindak sebelum pekerjaan dilanjutkan',
   'A|Insiden dan near miss dicatat serta dilaporkan sesuai prosedur']},
  {id:'q8',name:'Serah terima dan punch list',std:['Kontrak','UU 2/2017 tentang Jasa Konstruksi'],s:[
-  'P|Kontraktor menyatakan pekerjaan selesai dan mengajukan inspeksi',
-  'S|Inspeksi bersama (MK, pemilik, kontraktor) per area dan sistem',
+  'P|SPV menyatakan pekerjaan selesai dan mengajukan inspeksi ke QC',
+  'S|Inspeksi bersama internal (QC, PM, SPV) per area dan sistem',
   'S|Punch list dicatat per lokasi dengan penanggung jawab dan tenggat',
   'S!|Serah terima pertama (PHO) hanya setelah punch list kritis selesai',
   'A|As-built, manual, sertifikat uji, dan garansi lengkap',
@@ -749,7 +749,7 @@ $('#evalBtn').addEventListener('click',()=>{
   out.innerHTML=`<div><span class="pill ${ok?'ok':'bad'}">${ok?'MEMENUHI':'TIDAK MEMENUHI'}</span></div>
   <ul>${win.map(w=>`<li><span class="mono">Rata-rata hasil ${w.i+1}-${w.i+3}: ${w.a.toFixed(1)} MPa</span><span class="pill ${w.ok?'ok':'bad'}">${w.ok?'≥':'<'} f'c ${fc}</span></li>`).join('')}
   ${ind.map(x=>`<li><span class="mono">Hasil ${x.i+1}: ${x.x.toFixed(1)} MPa</span><span class="pill ${x.ok?'ok':'bad'}">${x.ok?'≥':'<'} batas ${lim.toFixed(1)}</span></li>`).join('')}</ul>
-  <p class="sub" style="margin-top:10px">Batas hasil individu: f'c − 3,5 MPa bila f'c ≤ 35 MPa, atau 0,90 f'c bila f'c > 35 MPa.${ok?'':' Terbitkan NCR dan ajukan uji lanjutan ke MK.'}</p>`;
+  <p class="sub" style="margin-top:10px">Batas hasil individu: f'c − 3,5 MPa bila f'c ≤ 35 MPa, atau 0,90 f'c bila f'c > 35 MPa.${ok?'':' Terbitkan NCR dan ajukan uji lanjutan ke PM.'}</p>`;
 });
 $('#smpBtn').addEventListener('click',()=>{
   const v=parseFloat($('#vol').value)||0,a=parseFloat($('#luas').value)||0;
@@ -809,9 +809,9 @@ function route(){
 window.addEventListener('hashchange',route);
 /* latihan */
 const QZ=[
- {q:"Pembesian kolom selesai dipasang. Apa langkah berikutnya sebelum pengecoran?",o:["Memesan beton agar truk bisa datang pagi","Mengajukan RFI dan menunggu persetujuan tertulis QC dan MK","Meminta mandor memastikan sendiri bahwa pembesian benar"],a:1,e:"Inspeksi pembesian adalah hold point. Pekerjaan berikutnya tidak boleh mulai tanpa persetujuan tertulis."},
+ {q:"Pembesian kolom selesai dipasang. Apa langkah berikutnya sebelum pengecoran?",o:["Memesan beton agar truk bisa datang pagi","Mengajukan RFI ke QC dan menunggu persetujuan tertulis","Meminta mandor memastikan sendiri bahwa pembesian benar"],a:1,e:"Inspeksi pembesian adalah hold point. Pekerjaan berikutnya tidak boleh mulai tanpa persetujuan tertulis."},
  {q:"Slump truk ketiga berada di luar batas spesifikasi. Apa tindakannya?",o:["Tolak truk, catat hasilnya, dan jangan dicor","Tambahkan air di lokasi lalu cor","Cor di area yang tidak struktural"],a:0,e:"Beton di luar batas spesifikasi ditolak. Menambah air di lokasi mengubah kualitas beton."},
- {q:"Rata-rata tiga hasil uji tekan berturut-turut lebih rendah dari f'c. Apa yang dilakukan?",o:["Mengubah f'c rencana agar hasil lolos","Menunggu beberapa hari lalu menguji ulang tanpa melapor","Mengevaluasi di tab Alat uji, menerbitkan NCR, dan mengajukan uji lanjutan ke MK"],a:2,e:"Hasil di bawah kriteria SNI 2847:2019 berarti tidak memenuhi. Laporkan lewat NCR dan ajukan uji lanjutan (core drill atau NDT) ke MK."},
+ {q:"Rata-rata tiga hasil uji tekan berturut-turut lebih rendah dari f'c. Apa yang dilakukan?",o:["Mengubah f'c rencana agar hasil lolos","Menunggu beberapa hari lalu menguji ulang tanpa melapor","Mengevaluasi di tab Alat uji, menerbitkan NCR, dan mengajukan uji lanjutan ke PM"],a:2,e:"Hasil di bawah kriteria SNI 2847:2019 berarti tidak memenuhi. Laporkan lewat NCR dan ajukan uji lanjutan (core drill atau NDT) ke PM."},
  {q:"Hollow test menemukan keramik berongga di area basah. Apa yang paling tepat?",o:["Menutup dengan nat agar tidak terlihat","Mengabaikan karena areanya kecil","Mencatat NCR dengan lokasi dan tingkat temuan, memperbaiki, lalu uji ulang"],a:2,e:"Temuan dicatat agar bisa dilacak sampai tutup, dan perbaikan harus diuji ulang."},
  {q:"Di mana data checklist dan NCR Anda disimpan?",o:["Di server pusat yang bisa dilihat semua orang","Di browser perangkat ini saja, jadi laporan perlu disalin dan dikirim","Di akun email Anda"],a:1,e:"Tidak ada sinkronisasi. Pakai Salin laporan di tab Rekap untuk berbagi, dan jangan hapus data browser."}
 ];
