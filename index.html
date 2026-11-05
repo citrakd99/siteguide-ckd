@@ -1,0 +1,775 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0E6B58"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style><title>SiteGuide CKD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: field handbook. Sticky masthead with role switch, one scrolling column of job accordions, bottom tab bar. */
+:root{
+  --bg:#EDF0EE; --surface:#F8FAF9; --ink:#15211D; --muted:#53635D; --line:#C9D3CF; --chip:#E0E7E4;
+  --accent:#0E6B58; --accent-ink:#FFFFFF;
+  --hold:#B77B00; --hold-bg:#FFF1CC; --ok:#1B7438; --ok-bg:#DCF0E2; --bad:#B3261E; --bad-bg:#FBE3E0;
+  --f-display:'Barlow Condensed','Arial Narrow',sans-serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1613; --surface:#18221E; --ink:#E5ECE9; --muted:#97A9A1; --line:#2B3A34; --chip:#22302A;
+    --accent:#3FBF9F; --accent-ink:#06150F;
+    --hold:#F0B429; --hold-bg:#3A2E0A; --ok:#5CD08A; --ok-bg:#16301F; --bad:#FF8F85; --bad-bg:#3D1B18;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1613; --surface:#18221E; --ink:#E5ECE9; --muted:#97A9A1; --line:#2B3A34; --chip:#22302A;
+  --accent:#3FBF9F; --accent-ink:#06150F;
+  --hold:#F0B429; --hold-bg:#3A2E0A; --ok:#5CD08A; --ok-bg:#16301F; --bad:#FF8F85; --bad-bg:#3D1B18;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-block:0 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:12px 10px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand h1{font-family:var(--f-display);font-weight:700;font-size:28px;letter-spacing:.02em;margin:0;text-transform:uppercase;line-height:1}
+.brand small{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.seg button{font:600 14px var(--f-body);padding:9px 6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-width:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.seg button span{display:block;font:400 11px var(--f-body);opacity:.85}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h2{font-family:var(--f-display);font-size:24px;text-transform:uppercase;letter-spacing:.03em;margin:22px 0 4px}
+.sub{color:var(--muted);margin:0 0 14px;font-size:13px}
+.note{background:var(--hold-bg);border:1px solid var(--hold);padding:10px 12px;font-size:13px;margin:14px 0}
+section[hidden]{display:none}
+
+/* job accordion */
+details.job{background:var(--surface);border:1px solid var(--line);margin-bottom:10px}
+details.job>summary{list-style:none;cursor:pointer;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+details.job>summary::-webkit-details-marker{display:none}
+.jname{font-weight:600;min-width:0}
+.jmeta{display:flex;gap:8px;align-items:center;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.bar{grid-column:1/-1;height:5px;background:var(--chip)}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.pill{font:500 11px var(--f-mono);padding:2px 7px;letter-spacing:.03em;white-space:nowrap}
+.pill.hp{background:var(--hold-bg);color:var(--hold);border:1px solid var(--hold)}
+.pill.ok{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok)}
+.pill.bad{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad)}
+.pill.mid{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+.jbody{padding:2px 14px 14px;border-top:1px solid var(--line)}
+.stds{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+.stds span{font:400 12px var(--f-mono);background:var(--chip);padding:3px 8px;overflow-wrap:anywhere}
+.ph{font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 4px}
+label.step{display:grid;grid-template-columns:24px 1fr;gap:10px;padding:9px 8px 9px 10px;border-left:4px solid transparent;cursor:pointer;align-items:start}
+label.step+label.step{border-top:1px dashed var(--line)}
+label.step input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--accent)}
+label.step.hp{border-left-color:var(--hold);background:linear-gradient(90deg,var(--hold-bg),transparent 70%)}
+label.step input:checked+.st{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.st{min-width:0;overflow-wrap:anywhere}
+.tag{display:inline-block;font:600 10px var(--f-mono);letter-spacing:.06em;background:var(--hold);color:#fff;padding:1px 6px;margin-left:6px;vertical-align:1px}
+:root[data-theme="dark"] .tag{color:#1b1400}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag{color:#1b1400}}
+textarea,input[type=text],input[type=number],input[type=date],select{width:100%;font:15px var(--f-body);padding:9px 10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0}
+textarea{min-height:76px;resize:vertical}
+.jbody textarea{margin-top:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{font:600 14px var(--f-body);padding:10px 14px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.warn{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.small{padding:6px 10px;font-size:13px}
+
+/* forms & tools */
+.card{background:var(--surface);border:1px solid var(--line);padding:14px;margin-bottom:12px}
+.card h3{font-family:var(--f-display);font-size:20px;text-transform:uppercase;letter-spacing:.03em;margin:0 0 4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:460px){.grid2{grid-template-columns:1fr}}
+.f{display:block;margin-top:10px;font-size:13px;color:var(--muted)}
+.f>*:last-child{margin-top:4px;color:var(--ink)}
+.res{margin-top:12px;font-size:14px}
+.res ul{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+.res li{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tscroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:420px;font-size:13px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600}
+td.n{font-family:var(--f-mono);white-space:nowrap}
+.ncr{border:1px solid var(--line);background:var(--surface);padding:12px;margin-bottom:10px}
+.ncr header{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+.ncr b{font-family:var(--f-mono);font-size:13px}
+.ncr p{margin:8px 0 0;overflow-wrap:anywhere}
+.ncr .k{color:var(--muted);font-size:12px}
+.empty{border:1px dashed var(--line);padding:18px;color:var(--muted);text-align:center}
+table.sum td:last-child,table.sum th:last-child{text-align:right}
+
+/* panduan */
+.stepper{list-style:none;margin:12px 0 0;padding:0;counter-reset:s}
+.stepper li{position:relative;padding:0 0 18px 44px;counter-increment:s;min-width:0}
+.stepper li::before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font:600 14px var(--f-mono)}
+.stepper li::after{content:"";position:absolute;left:14px;top:34px;bottom:4px;width:2px;background:var(--line)}
+.stepper li:last-child{padding-bottom:0}
+.stepper li:last-child::after{display:none}
+.stepper li.hps::before{background:var(--hold);color:#1b1400}
+.stepper b{display:block}
+.stepper span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.gl{margin:8px 0 0}
+.gl dt{font:600 13px var(--f-mono);margin-top:12px}
+.gl dd{margin:2px 0 0;color:var(--muted);font-size:14px}
+.sech{font-family:var(--f-display);font-size:20px;text-transform:uppercase;letter-spacing:.03em;margin:18px 0 8px}
+.qz{border:1px solid var(--line);background:var(--surface);padding:12px;margin:0 0 10px;min-width:0}
+.qz legend{font-weight:600;padding:0 4px}
+.qo{display:block;width:100%;text-align:left;font:15px var(--f-body);padding:9px 10px;margin-top:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;border-radius:0}
+.qo.ok{border-color:var(--ok);background:var(--ok-bg)}
+.qo.bad{border-color:var(--bad);background:var(--bad-bg)}
+.qo:disabled{color:var(--ink);cursor:default}
+.qe{margin:10px 0 0;font-size:14px;color:var(--muted)}
+.note a{color:inherit;font-weight:600}
+.demo{margin-top:10px;border:1px solid var(--line);background:var(--bg)}
+.demo label.step{cursor:default}
+
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:0 max(8px,env(safe-area-inset-left,0px)) env(safe-area-inset-bottom,0px) max(8px,env(safe-area-inset-right,0px))}
+.tabs a{display:block;text-align:center;padding:12px 4px 11px;color:var(--muted);text-decoration:none;font:600 11px var(--f-mono);letter-spacing:.02em;text-transform:uppercase;border-top:3px solid transparent;margin-top:-1px}
+.tabs a[aria-current="page"]{color:var(--accent);border-top-color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(72px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 14px;font-size:13px;z-index:40;max-width:90vw}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>SiteGuide CKD</h1><small id="roleSub"></small></div>
+    <div id="projLine" style="font-size:12px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere"></div>
+    <div class="seg" id="roleSeg" role="group" aria-label="Pilih peran"></div>
+  </header>
+
+  <section id="checklist">
+    <div class="note" id="firstRun" hidden>Baru memakai SiteGuide? Buka <a href="#panduan">Panduan</a> untuk memahami alurnya. <button class="btn ghost small" id="hideFirst" type="button" style="margin-left:6px">Tutup</button></div>
+    <h2 id="roleTitle"></h2>
+    <p class="sub">Buka satu pekerjaan, ikuti urutan sebelum, saat, dan setelah kerja. Langkah bertanda <b>HOLD POINT</b> wajib disetujui sebelum pekerjaan berikutnya dimulai.</p>
+    <div id="jobs"></div>
+    <div class="note">Nomor dan edisi standar harus dicocokkan dengan dokumen kontrak dan spesifikasi proyek. Nilai ambang uji (tekanan, torsi, toleransi, durasi) sengaja tidak ditulis di sini: isi dari spesifikasi proyek.</div>
+  </section>
+
+  <section id="ncr" hidden>
+    <h2>Laporan Ketidaksesuaian (NCR)</h2>
+    <p class="sub">Catat temuan di lapangan, tentukan tindakan korektif, pantau sampai tutup.</p>
+    <form class="card" id="ncrForm" autocomplete="off">
+      <div class="grid2">
+        <label class="f">Lokasi / area<input type="text" id="nArea" required placeholder="mis. Lantai 2, as C-D/3"></label>
+        <label class="f">Tingkat<select id="nLevel"><option>Minor</option><option>Mayor</option><option>Kritis</option></select></label>
+      </div>
+      <label class="f">Pekerjaan terkait<select id="nJob"></select></label>
+      <label class="f">Uraian temuan<textarea id="nDesc" required placeholder="Apa yang tidak sesuai, terhadap gambar atau standar mana"></textarea></label>
+      <label class="f">Tindakan korektif<textarea id="nAct" placeholder="Perbaikan yang diusulkan"></textarea></label>
+      <label class="f">Batas waktu perbaikan<input type="date" id="nDue"></label>
+      <div class="row"><button class="btn" type="submit">Simpan NCR</button></div>
+    </form>
+    <div id="ncrList"></div>
+  </section>
+
+  <section id="alat" hidden>
+    <h2>Alat Uji</h2>
+    <p class="sub">Hitungan cepat untuk QC dan pengawas beton.</p>
+
+    <div class="card">
+      <h3>Evaluasi kuat tekan beton</h3>
+      <p class="sub" style="margin-bottom:0">Kriteria penerimaan SNI 2847:2019 (pasal 26.12). Satu hasil uji = rata-rata 2 silinder dari sampel yang sama.</p>
+      <div class="grid2">
+        <label class="f">f'c rencana (MPa)<input type="number" id="fc" inputmode="decimal" step="0.1" value="25"></label>
+        <label class="f">Hasil uji (MPa)<textarea id="hasil" style="min-height:44px" placeholder="25.8 27.1 24.2 26.0">25.8 27.1 24.2 26.0 25.5</textarea></label>
+      </div>
+      <p class="sub" style="margin:8px 0 0">Pisahkan dengan spasi atau baris baru. Perkiraan konversi: K-300 ≈ 25 MPa (K × 0,083).</p>
+      <div class="row"><button class="btn" id="evalBtn" type="button">Evaluasi</button></div>
+      <div class="res" id="evalOut" aria-live="polite"></div>
+    </div>
+
+    <div class="card">
+      <h3>Jumlah sampel beton</h3>
+      <p class="sub" style="margin-bottom:0">Minimal 1 set per hari, per 110 m³, dan per 460 m² luas pelat atau dinding. Spesifikasi proyek bisa lebih ketat.</p>
+      <div class="grid2">
+        <label class="f">Volume cor hari ini (m³)<input type="number" id="vol" inputmode="decimal" min="0" value="60"></label>
+        <label class="f">Luas pelat / dinding (m²)<input type="number" id="luas" inputmode="decimal" min="0" value="300"></label>
+      </div>
+      <div class="row"><button class="btn" id="smpBtn" type="button">Hitung</button></div>
+      <div class="res" id="smpOut" aria-live="polite"></div>
+    </div>
+
+    <div class="card">
+      <h3>Selimut beton minimum</h3>
+      <p class="sub">Acuan SNI 2847:2019 tabel 20.5.1.3.1 untuk beton normal. Gambar kerja menentukan bila lebih tebal.</p>
+      <div class="tscroll"><table>
+        <tr><th>Kondisi</th><th>Tulangan</th><th>Tebal</th></tr>
+        <tr><td>Dicor langsung di tanah dan tetap kontak tanah</td><td>Semua</td><td class="n">75 mm</td></tr>
+        <tr><td rowspan="2">Terpapar cuaca atau kontak tanah</td><td>D19 sampai D57</td><td class="n">50 mm</td></tr>
+        <tr><td>D16 dan lebih kecil</td><td class="n">40 mm</td></tr>
+        <tr><td rowspan="2">Tidak terpapar cuaca atau tanah: pelat, dinding</td><td>D43, D57</td><td class="n">40 mm</td></tr>
+        <tr><td>D36 dan lebih kecil</td><td class="n">20 mm</td></tr>
+        <tr><td>Tidak terpapar: balok, kolom</td><td>Tulangan utama, sengkang, spiral</td><td class="n">40 mm</td></tr>
+      </table></div>
+    </div>
+  </section>
+
+  <section id="rekap" hidden>
+    <h2>Rekap Harian</h2>
+    <p class="sub">Progres checklist semua peran dan laporan siap tempel ke WhatsApp.</p>
+    <div class="card">
+      <div class="grid2">
+        <label class="f">Proyek<input type="text" id="mProj" placeholder="Nama proyek"></label>
+        <label class="f">Kontraktor<input type="text" id="mCon" placeholder="Nama kontraktor"></label>
+        <label class="f">Nama pengguna<input type="text" id="mUser" placeholder="Nama Anda" autocomplete="name"></label>
+        <label class="f">Area / lantai<input type="text" id="mArea" placeholder="Area kerja"></label>
+      </div>
+    </div>
+    <div class="card"><div class="tscroll" id="sumTbl"></div></div>
+    <div class="card">
+      <h3>Laporan</h3>
+      <textarea id="report" readonly style="min-height:220px;font-family:var(--f-mono);font-size:13px"></textarea>
+      <div class="row"><button class="btn" id="copyBtn" type="button">Salin laporan</button></div>
+    </div>
+    <div class="card">
+      <h3>Hapus data</h3>
+      <p class="sub">Menghapus checklist, catatan, dan NCR di perangkat ini. Tidak bisa dibatalkan.</p>
+      <div class="row"><button class="btn ghost" id="wipeBtn" type="button">Hapus semua data</button></div>
+    </div>
+  </section>
+
+  <section id="panduan" hidden>
+    <h2>Panduan Penggunaan</h2>
+    <p class="sub">Pelajari alurnya sekali. Setelah itu aplikasi cukup dipakai sebagai daftar periksa harian.</p>
+
+    <div class="card">
+      <h3>Mulai dalam 3 langkah</h3>
+      <ol style="margin:8px 0 0;padding-left:20px;display:grid;gap:6px">
+        <li>Pilih peran di bagian atas: SPV CSA, SPV MEP, atau QC.</li>
+        <li>Buka pekerjaan yang sedang berjalan, misalnya Pembesian atau Instalasi piping.</li>
+        <li>Ikuti urutan Sebelum kerja, Saat kerja, Setelah kerja, lalu centang tiap langkah yang sudah dikerjakan.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Alur satu pekerjaan</h3>
+      <ol class="stepper">
+        <li><b>Siapkan dokumen dan material</b><span>Cek gambar kerja, submittal yang disetujui, dan material yang sudah lolos inspeksi masuk (MIR).</span></li>
+        <li><b>Kerjakan sesuai gambar</b><span>Ikuti langkah "Saat kerja", centang yang selesai, dan tulis temuan di kolom catatan.</span></li>
+        <li class="hps"><b>Hold point: ajukan RFI</b><span>Pekerjaan berhenti. QC dan MK memeriksa lalu memberi persetujuan tertulis. Tanpa itu, pekerjaan berikutnya tidak boleh mulai.</span></li>
+        <li><b>Lanjutkan dan selesaikan</b><span>Setelah disetujui, teruskan sampai langkah "Setelah kerja": uji, perbaikan, dan dokumentasi.</span></li>
+        <li><b>Ada yang tidak sesuai? Terbitkan NCR</b><span>Catat lokasi, uraian, dan tindakan korektif di tab NCR. Ubah statusnya sampai Tutup.</span></li>
+        <li><b>Laporkan</b><span>Tab Rekap menampilkan progres semua pekerjaan. Salin laporan lalu kirim ke grup.</span></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Dua jenis langkah</h3>
+      <p class="sub" style="margin:0">Langkah biasa cukup dicentang saat selesai. Langkah bergaris kuning wajib disetujui QC dan MK sebelum pekerjaan berikutnya. Lencana HP di daftar pekerjaan menunjukkan jumlah hold point yang belum dicentang.</p>
+      <div class="demo">
+        <label class="step"><input type="checkbox" disabled><span class="st">Langkah biasa: bekisting rapat dan tidak bocor</span></label>
+        <label class="step hp"><input type="checkbox" disabled><span class="st">Inspeksi pembesian oleh QC dan MK sebelum cor<span class="tag">HOLD POINT</span></span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Fungsi tiap menu</h3>
+      <dl class="gl">
+        <dt>CHECKLIST</dt><dd>Daftar periksa per pekerjaan, lengkap dengan standar rujukan dan kolom catatan.</dd>
+        <dt>NCR</dt><dd>Catatan ketidaksesuaian. Ketuk "Ubah status" untuk berpindah dari Terbuka ke Dalam perbaikan lalu Tutup.</dd>
+        <dt>ALAT UJI</dt><dd>Evaluasi kuat tekan beton, jumlah sampel, dan tabel selimut beton.</dd>
+        <dt>REKAP</dt><dd>Isi proyek dan nama Anda, lihat progres, lalu salin laporan harian.</dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h3>Contoh alur: pengecoran kolom</h3>
+      <ol class="stepper">
+        <li class="hps"><b>Pembesian selesai dan disetujui</b><span>QC dan MK memeriksa diameter, jarak sengkang, dan selimut beton.</span></li>
+        <li><b>Bekisting selesai</b><span>Kelurusan dan elevasi diukur, bagian dalam dibersihkan.</span></li>
+        <li class="hps"><b>Izin cor ditandatangani</b><span>Tanpa izin tertulis QC, truk mixer tidak boleh dipanggil.</span></li>
+        <li><b>Beton tiba</b><span>Cek surat jalan, lalu uji slump. Di luar batas spesifikasi berarti truk ditolak.</span></li>
+        <li><b>Cor dan padatkan</b><span>Ambil silinder sesuai jumlah sampel dari tab Alat uji.</span></li>
+        <li><b>Curing dan uji tekan</b><span>Hasil dievaluasi di Alat uji. Tidak memenuhi berarti terbitkan NCR.</span></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Pembagian peran umum</h3>
+      <dl class="gl">
+        <dt>SPV CSA</dt><dd>Mengawasi pekerjaan sipil, struktur, dan arsitektur, serta mengajukan RFI saat hold point.</dd>
+        <dt>SPV MEP</dt><dd>Mengawasi listrik, tata udara, plumbing, piping, dan proteksi kebakaran, serta menjadwalkan uji dan T&amp;C.</dd>
+        <dt>QC</dt><dd>Memeriksa dan menyetujui hold point, menguji material dan beton, menerbitkan dan menutup NCR.</dd>
+      </dl>
+      <p class="sub" style="margin:10px 0 0">Sesuaikan dengan struktur organisasi proyek bila berbeda.</p>
+    </div>
+
+    <h3 class="sech">Latihan singkat</h3>
+    <div id="quiz"></div>
+
+    <div class="card">
+      <h3>Istilah</h3>
+      <dl class="gl">
+        <dt>Hold point (HP)</dt><dd>Titik berhenti. Pekerjaan berikutnya baru boleh mulai setelah persetujuan tertulis.</dd>
+        <dt>Witness point (WP)</dt><dd>Pemeriksaan yang disaksikan MK atau pemilik. Pekerjaan boleh lanjut bila yang diundang tidak hadir, dengan catatan.</dd>
+        <dt>RFI</dt><dd>Di aplikasi ini berarti Request for Inspection: permintaan inspeksi sebelum pekerjaan ditutup.</dd>
+        <dt>MIR</dt><dd>Inspeksi material masuk.</dd>
+        <dt>NCR</dt><dd>Non-Conformance Report, laporan ketidaksesuaian terhadap gambar, spesifikasi, atau standar.</dd>
+        <dt>MK</dt><dd>Manajemen konstruksi atau konsultan pengawas.</dd>
+        <dt>Submittal</dt><dd>Dokumen material atau metode kerja yang diajukan untuk disetujui sebelum dipakai.</dd>
+        <dt>Punch list</dt><dd>Daftar perbaikan kecil yang harus selesai sebelum serah terima.</dd>
+        <dt>PHO / FHO</dt><dd>Serah terima pertama dan serah terima akhir setelah masa pemeliharaan.</dd>
+        <dt>As-built</dt><dd>Gambar yang sesuai kondisi terbangun.</dd>
+        <dt>DFT</dt><dd>Tebal lapisan cat kering.</dd>
+        <dt>NDT</dt><dd>Uji tanpa merusak, misalnya untuk las.</dd>
+        <dt>WPS</dt><dd>Prosedur pengelasan.</dd>
+        <dt>T&amp;C</dt><dd>Testing and commissioning, uji dan penyerahan operasi sistem MEP.</dd>
+        <dt>SMKK</dt><dd>Sistem manajemen keselamatan konstruksi.</dd>
+        <dt>f'c</dt><dd>Kuat tekan beton yang direncanakan, dalam MPa.</dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h3>Pertanyaan umum</h3>
+      <dl class="gl">
+        <dt>Data saya disimpan di mana?</dt><dd>Di browser perangkat ini saja. Perangkat lain tidak melihatnya. Gunakan Salin laporan di tab Rekap untuk berbagi.</dd>
+        <dt>Ganti HP, apakah checklist ikut pindah?</dt><dd>Tidak. Data tidak tersinkron antar perangkat.</dd>
+        <dt>Apa arti "spek proyek" pada langkah tertentu?</dt><dd>Nilai batas (tekanan, torsi, toleransi, durasi) tidak ditulis di aplikasi. Ambil dari spesifikasi teknis kontrak.</dd>
+        <dt>Bagaimana memasang di layar utama HP?</dt><dd>Gunakan paket PWA di hosting HTTPS, lalu pilih "Tambahkan ke layar utama" di menu browser.</dd>
+      </dl>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" aria-label="Menu utama">
+  <a href="#checklist" data-t="checklist">Checklist</a>
+  <a href="#ncr" data-t="ncr">NCR</a>
+  <a href="#alat" data-t="alat">Alat uji</a>
+  <a href="#rekap" data-t="rekap">Rekap</a>
+  <a href="#panduan" data-t="panduan">Panduan</a>
+</nav>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* Format langkah: 'FASE[!]|teks'. P sebelum kerja, S saat kerja, A setelah kerja. '!' menandai hold point. */
+const R = {
+csa:{label:'SPV CSA',sub:'Sipil · Struktur · Arsitektur',jobs:[
+ {id:'c1',name:'Galian dan urugan',std:['SNI 8460:2017 (geoteknik)','Gambar kerja dan spesifikasi'],s:[
+  'P|Titik as, elevasi galian, dan patok bouwplank sudah diverifikasi surveyor',
+  'P|Utilitas bawah tanah (kabel, pipa) dicek dan ditandai sebelum galian',
+  'P|Pengaman tepi galian dan rambu terpasang sesuai SMKK',
+  'S|Kemiringan lereng dipantau, waspada retak tanah dan rembesan air',
+  'S|Material urugan sesuai spesifikasi dan dipadatkan per lapis',
+  'A!|Dimensi dan elevasi dasar galian dicek sebelum lantai kerja atau pondasi',
+  'A|Uji kepadatan urugan sesuai frekuensi spesifikasi (nilai: spek proyek)',
+  'A|Hasil dicatat di laporan harian dengan foto progres']},
+ {id:'c2',name:'Pondasi',std:['SNI 8460:2017','SNI 2847:2019'],s:[
+  'P|Posisi dan elevasi pondasi dicocokkan dengan gambar dan hasil survei',
+  'P|Lantai kerja (lean concrete) selesai dan bersih',
+  'S|Pembesian dan bekisting sesuai gambar (ikuti checklist Pembesian dan Bekisting)',
+  'S!|RFI diajukan ke QC dan MK, persetujuan tertulis sebelum pengecoran',
+  'S|Pengecoran mengikuti checklist Pengecoran beton',
+  'A|Posisi stek kolom (as dan ketinggian) dicek setelah cor',
+  'A|Deviasi as pondasi dicatat, lapor bila di luar toleransi spesifikasi']},
+ {id:'c3',name:'Pembesian',std:['SNI 2052:2017','SNI 2847:2019'],s:[
+  'P|Sertifikat pabrik dan merek baja sesuai submittal yang disetujui',
+  'P|Diameter, ulir atau polos, dan mutu sesuai gambar',
+  'P|Baja bebas karat lepas, minyak, dan lumpur',
+  'S|Jumlah, diameter, dan jarak tulangan sesuai gambar kerja',
+  'S|Panjang lewatan, panjang penyaluran, dan kait sesuai detail gambar',
+  'S|Jarak sengkang di daerah tumpuan dan lapangan sesuai gambar',
+  'S|Beton decking terpasang sesuai tebal selimut (lihat tabel di Alat uji)',
+  'A!|Inspeksi pembesian oleh QC dan MK sebelum bekisting ditutup dan sebelum cor',
+  'A|Tulangan dijaga tidak bergeser selama pengecoran']},
+ {id:'c4',name:'Bekisting dan perancah',std:['SNI 2847:2019','Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Gambar bekisting atau perancah disetujui bila diwajibkan spesifikasi',
+  'P|Fondasi perancah stabil, tidak di tanah lunak atau tergenang',
+  'S|Bekisting kaku dan rapat, tidak bocor air semen',
+  'S|Dimensi, kelurusan, dan elevasi sesuai gambar, diukur surveyor',
+  'S|Pelumas bekisting merata dan tidak mengenai tulangan',
+  'S|Bekisting kolom dan dinding dibersihkan lewat lubang pembersih',
+  'A!|Izin cor ditandatangani QC bersama persetujuan pembesian',
+  'A|Pembongkaran hanya setelah umur atau kekuatan beton memenuhi spesifikasi',
+  'A|Reshoring dipasang bila diinstruksikan']},
+ {id:'c5',name:'Pengecoran beton',std:['SNI 2847:2019','SNI 7656:2012','SNI 1972:2008','SNI 4810:2013','SNI 1974:2011'],s:[
+  'P|Mutu, mix design, dan batching plant sesuai submittal yang disetujui',
+  'P|Rencana cor: titik awal, arah, jumlah mixer, pompa, dan alat cadangan',
+  'P|Izin cor sudah ditandatangani sebelum truk mixer datang',
+  'P|Cuaca dicek, penutup disiapkan bila hujan',
+  'S|Surat jalan dicek: mutu, jam batching, volume, nomor truk',
+  'S!|Uji slump per truk atau sesuai frekuensi spek, tolak bila di luar batas spesifikasi',
+  'S|Silinder diambil sesuai frekuensi (lihat kalkulator jumlah sampel)',
+  'S|Pemadatan dengan vibrator sesuai metode, cegah segregasi',
+  'S|Cegah cold joint: jeda antar lapis tidak melewati waktu ikat awal',
+  'A|Finishing permukaan dan curing dimulai segera',
+  'A|Curing minimum sesuai spesifikasi proyek',
+  'A|Benda uji dilindungi dan dikirim ke lab pada waktunya']},
+ {id:'c6',name:'Pasangan dinding',std:['Spesifikasi dan gambar arsitektur','Rekomendasi pabrikan material'],s:[
+  'P|Material (bata atau bata ringan, perekat) sesuai submittal dan lolos MIR',
+  'P|Marking as dinding dan elevasi sesuai gambar oleh surveyor',
+  'S|Angkur atau stek dinding ke kolom terpasang sesuai detail',
+  'S|Benang dan waterpass dicek tiap lapis agar lurus dan tegak',
+  'S|Perekat atau spesi merata tanpa rongga',
+  'S|Kolom praktis dan balok latei sesuai jarak di gambar',
+  'A!|Kerataan dan ketegakan dicek sebelum plesteran',
+  'A|Bukaan pintu dan jendela sesuai dimensi dan posisi di gambar']},
+ {id:'c7',name:'Plesteran dan acian',std:['Spesifikasi teknis','Rekomendasi pabrikan'],s:[
+  'P|Permukaan dasar bersih, lembap, tidak berdebu',
+  'P|Instalasi MEP dalam dinding (conduit, pipa) sudah selesai dan sudah diuji',
+  'S|Tebal plester sesuai spesifikasi, kepala plesteran dipasang',
+  'S|Sudut siku dan lurus, kerataan dicek dengan mistar (toleransi: spek proyek)',
+  'A|Permukaan dirawat agar tidak retak susut',
+  'A!|Kerataan dan retak rambut diinspeksi sebelum acian atau cat']},
+ {id:'c8',name:'Waterproofing',std:['Spesifikasi teknis','Rekomendasi pabrikan'],s:[
+  'P|Material sesuai submittal, kemasan segel dan belum kedaluwarsa',
+  'P|Permukaan bersih dan sesuai syarat pabrikan, fillet sudut bila disyaratkan',
+  'P|Pipa tembus (drain, sleeve) sudah terpasang dan diberi detail penutup',
+  'S|Primer dan lapisan sesuai jumlah, tebal, dan waktu antar lapis pabrikan',
+  'S|Lapisan naik ke dinding sesuai tinggi di gambar',
+  'A!|Flood test: durasi dan tinggi air sesuai spesifikasi, disaksikan QC dan MK',
+  'A|Screed pelindung hanya setelah lulus flood test',
+  'A|Hasil uji dan foto dicatat']},
+ {id:'c9',name:'Lantai dan keramik',std:['Spesifikasi teknis','Rekomendasi pabrikan'],s:[
+  'P|Elevasi lantai dan kemiringan area basah sesuai gambar',
+  'P|Material (ukuran, warna, batch) sesuai submittal',
+  'S|Perekat dan nat sesuai pabrikan, pola dan sambungan sesuai gambar',
+  'S|Kerataan dan beda tinggi antar ubin dicek dengan mistar',
+  'A!|Uji ketukan (hollow test) dan cek genangan air di area basah',
+  'A|Permukaan dilindungi sampai serah terima']},
+ {id:'c10',name:'Plafon',std:['Spesifikasi teknis','Rekomendasi pabrikan'],s:[
+  'P|Instalasi MEP di atas plafon (duct, pipa, kabel, sprinkler) sudah diuji dan disetujui',
+  'S|Rangka plafon rata, level dan titik akses sesuai gambar',
+  'A!|Kerataan, level, dan sambungan diinspeksi, temuan masuk punch list']},
+ {id:'c12',name:'Pengecatan dinding',std:['Technical data sheet (TDS) pabrikan','Spesifikasi teknis'],s:[
+  'P|Cat, dempul, dan sealer sesuai submittal, warna dan kode disetujui (sample area bila disyaratkan)',
+  'P|Acian sudah kering dan lolos inspeksi kerataan, kadar air memenuhi syarat pabrikan (nilai: TDS)',
+  'P|Permukaan bersih dari debu, minyak, dan jamur, retak sudah diperbaiki',
+  'S|Alkali sealer atau primer sesuai spesifikasi',
+  'S|Dempul dan amplas sampai rata, dicek dengan cahaya menyamping',
+  'S|Jumlah lapis, interval antar lapis, dan pengenceran sesuai TDS',
+  'S|Lantai, kusen, dan instalasi MEP dilindungi dari cipratan cat',
+  'A!|Warna, kerataan, belang, dan cacat diinspeksi, temuan masuk punch list',
+  'A|Touch-up dilakukan setelah pekerjaan lain selesai',
+  'A|Sisa cat dan kode warna dicatat untuk perbaikan nanti']},
+ {id:'c13',name:'Pengecatan besi (baja)',std:['ISO 8501-1 (kebersihan permukaan)','ISO 19840 (pengukuran DFT)','TDS pabrikan','Spesifikasi sistem cat proyek'],s:[
+  'P|Sistem cat (primer, intermediate, finish) sesuai spesifikasi dan submittal',
+  'P|Minyak dan gemuk dibersihkan, tepi tajam dan percikan las dihaluskan',
+  'P|Persiapan permukaan (blasting atau mekanis) sesuai tingkat kebersihan yang disyaratkan spesifikasi',
+  'S!|Kebersihan permukaan diinspeksi dan disetujui QC sebelum primer',
+  'S|Kondisi lingkungan dicek: suhu baja, suhu udara, kelembapan, titik embun (batas: TDS)',
+  'S|Primer diaplikasikan dalam batas waktu setelah persiapan permukaan sesuai TDS',
+  'S|Stripe coat di sudut, las, dan tepi',
+  'S|Tebal lapisan kering (DFT) diukur tiap lapis dan dicatat (target: spek proyek)',
+  'S|Interval antar lapis dan pot life sesuai TDS',
+  'A!|Inspeksi akhir: DFT total, cacat visual, dan uji adhesi bila disyaratkan',
+  'A|Kerusakan akibat angkut dan sambungan lapangan diperbaiki sesuai prosedur',
+  'A|Hasil DFT dan kondisi lingkungan dicatat']},
+ {id:'c11',name:'Struktur baja',std:['SNI 1729:2020','SNI 7971:2013 (baja canai dingin)','WPS dan PQR sesuai spesifikasi'],s:[
+  'P|Sertifikat material dan marking baja sesuai submittal',
+  'P|Shop drawing dan WPS disetujui, juru las bersertifikat',
+  'S|Dimensi dan elevasi base plate, anchor bolt, dan kelurusan kolom dicek',
+  'S|Baut: jenis dan pengencangan sesuai spesifikasi (nilai torsi: spek proyek)',
+  'S!|Inspeksi visual las dan uji NDT sesuai persyaratan (persentase: spek proyek)',
+  'A|Cat atau galvanis diperbaiki pada bekas las dan sambungan',
+  'A|Hasil inspeksi las dan baut dicatat']}
+]},
+mep:{label:'SPV MEP',sub:'Mekanikal · Elektrikal · Plumbing',jobs:[
+ {id:'m1',name:'Instalasi listrik (kabel, panel, grounding)',std:['PUIL 2011 (SNI 0225:2011)','Spesifikasi dan gambar kerja'],s:[
+  'P|Material (kabel, MCB, panel) sesuai submittal: merek, ukuran, sertifikat',
+  'P|Jalur kabel dan tray dicek tidak bentrok dengan struktur, duct, dan pipa',
+  'S|Penampang kabel, warna inti, dan terminasi sesuai gambar dan PUIL',
+  'S|Kabel dan sirkuit diberi label di panel',
+  'S|Pentanahan panel dan rangka logam terhubung',
+  'A!|Uji tahanan isolasi dan kontinuitas, hasil dicatat (nilai syarat: PUIL dan spek)',
+  'A|Uji tahanan pentanahan (nilai syarat: spek proyek)',
+  'A|Single line diagram as-built diperbarui']},
+ {id:'m2',name:'Penerangan dan stop kontak',std:['PUIL 2011 (SNI 0225:2011)','Gambar kerja'],s:[
+  'P|Titik lampu, saklar, stop kontak sesuai gambar dan koordinasi plafon',
+  'S|Tinggi pemasangan sesuai gambar',
+  'S|Polaritas fasa, netral, dan grounding benar di stop kontak',
+  'A!|Uji nyala dan fungsi per ruang, temuan dicatat',
+  'A|Tingkat pencahayaan diukur bila disyaratkan (nilai: spek proyek)']},
+ {id:'m3',name:'Tata udara (HVAC)',std:['SNI 03-6572-2001','SNI 03-6390-2000','Spesifikasi teknis'],s:[
+  'P|Unit, duct, dan insulasi sesuai submittal',
+  'P|Posisi unit indoor dan outdoor, akses servis, dan jarak bebas sesuai gambar',
+  'S|Pipa refrigeran atau chilled water: kemiringan, insulasi, dan penyangga sesuai spesifikasi',
+  'S|Duct: sambungan rapat, penyangga, damper, dan akses sesuai gambar',
+  'S|Drain kondensat: kemiringan dan sambungan ke pembuangan',
+  'A!|Uji tekanan dan kebocoran pipa serta duct (nilai: spek proyek)',
+  'A|Testing and balancing: debit udara dan suhu (target: spek proyek)',
+  'A|Uji fungsi, manual, dan garansi diserahkan']},
+ {id:'m4',name:'Plumbing',std:['SNI 8153:2015','SNI 03-6481-2000'],s:[
+  'P|Pipa dan fitting sesuai submittal: jenis dan kelas tekanan',
+  'P|Sleeve dan titik tembus struktur dikoordinasikan sebelum cor',
+  'S|Kemiringan pipa air kotor sesuai gambar, penyangga dan jarak sesuai spesifikasi',
+  'S|Sambungan sesuai metode pabrikan (lem, ulir, fusi)',
+  'S|Pipa ventilasi dan clean out terpasang sesuai gambar',
+  'A!|Uji tekanan air bersih dan uji tuang air kotor sebelum ditutup (nilai dan durasi: spek proyek)',
+  'A|Flushing atau desinfeksi air bersih bila disyaratkan',
+  'A|Fixture diuji fungsi, tidak ada kebocoran setelah ditutup']},
+ {id:'m5',name:'Proteksi kebakaran',std:['SNI 03-3989-2000 (sprinkler)','SNI 03-1745-2000 (hidran)','SNI 03-3985-2000 (deteksi dan alarm)','Permen PU 26/PRT/M/2008'],s:[
+  'P|Peralatan bersertifikat atau terdaftar sesuai submittal',
+  'P|Titik sprinkler, hidran, dan detektor sesuai gambar dan koordinasi plafon',
+  'S|Posisi kepala sprinkler dan detektor sesuai gambar yang disetujui',
+  'S|Pipa: penyangga dan katup sesuai gambar, label sesuai spesifikasi',
+  'A!|Uji hidrostatik pipa sebelum ditutup, disaksikan MK (nilai: spek proyek)',
+  'A|Uji fungsi alarm, pompa, dan panel dicatat dalam berita acara',
+  'A|Sertifikat laik fungsi proteksi kebakaran diurus sesuai peraturan setempat']},
+ {id:'m6',name:'Proteksi petir dan grounding',std:['SNI 03-7015-2004','PUIL 2011 (SNI 0225:2011)'],s:[
+  'P|Gambar sistem petir (air terminal, down conductor, grounding) disetujui',
+  'S|Down conductor dan sambungan sesuai gambar, kontinuitas terjaga',
+  'S|Elektroda pentanahan sesuai gambar, bak kontrol terpasang',
+  'A!|Uji tahanan pentanahan dicatat dan disaksikan (nilai: spek proyek)',
+  'A|Equipotential bonding ke struktur, panel, dan sistem lain sesuai gambar']},
+ {id:'m7',name:'Arus lemah (data, CCTV, telepon)',std:['Spesifikasi teknis','ANSI/TIA-568 (acuan umum kabel data)'],s:[
+  'P|Jenis kabel dan perangkat sesuai submittal',
+  'S|Jalur terpisah dari kabel daya sesuai gambar',
+  'S|Kabel diberi label di kedua ujung, patch panel tertata',
+  'A!|Uji kabel dan uji fungsi CCTV, telepon, dan jaringan',
+  'A|Dokumentasi, diagram, dan kredensial diserahkan sesuai kontrak']},
+ {id:'m9',name:'Instalasi piping (chilled water, proses, hidran)',std:['ASME B31.9 (building services piping, acuan umum)','WPS dan PQR sesuai spesifikasi','Spesifikasi teknis'],s:[
+  'P|Pipa, fitting, flange, dan valve sesuai submittal, sertifikat material tersedia',
+  'P|Gambar isometrik atau shop drawing disetujui, rute dikoordinasi dengan struktur, duct, dan kabel',
+  'P|Juru las bersertifikat dan WPS disetujui bila pipa dilas',
+  'S|Jenis dan jarak penyangga (support, hanger) sesuai spesifikasi',
+  'S|Kemiringan sesuai gambar, air vent di titik tinggi dan drain di titik rendah',
+  'S|Sambungan las, flange, atau grooved sesuai metode, gasket dan baut sesuai spesifikasi',
+  'S|Valve terpasang dengan arah aliran benar dan mudah dioperasikan',
+  'S!|Inspeksi visual las dan NDT sebelum uji tekan (persentase: spek proyek)',
+  'S|Sleeve tembusan dinding atau lantai diberi sealing dan fire stopping',
+  'A!|Hydrotest sebelum isolasi dan pengecatan: tekanan dan durasi sesuai spesifikasi, disaksikan MK',
+  'A|Flushing dan pembersihan sistem sebelum dioperasikan',
+  'A|Isolasi, label, dan arah aliran dipasang sesuai spesifikasi',
+  'A|As-built dan berita acara uji disusun']},
+ {id:'m8',name:'Testing dan commissioning',std:['Spesifikasi teknis','Kontrak'],s:[
+  'P|Daftar uji T&C per sistem disepakati dengan MK dan pemilik',
+  'P|Semua instalasi selesai sesuai checklist per sistem',
+  'S!|Pelaksanaan T&C disaksikan MK atau pemilik, hasil ditandatangani',
+  'S|Temuan dicatat sebagai punch list, NCR bila perlu',
+  'A|As-built drawing, manual O&M, dan sertifikat uji diserahkan',
+  'A|Pelatihan operator bila disyaratkan kontrak']}
+]},
+qc:{label:'QC',sub:'Quality Control',jobs:[
+ {id:'q1',name:'Inspeksi material masuk (MIR)',std:['Submittal yang disetujui','Sertifikat pabrik dan hasil uji'],s:[
+  'P|Material dicocokkan dengan submittal atau material approval',
+  'S|Merek, tipe, ukuran, dan jumlah dicek terhadap surat jalan dan PO',
+  'S|Kondisi fisik, kemasan, dan tanggal produksi atau kedaluwarsa dicek',
+  'S|Sertifikat pabrik atau hasil uji tersedia dan sesuai batch',
+  'A!|Putusan: diterima, ditolak, atau diterima bersyarat, material ditandai',
+  'A|Material ditolak dikeluarkan dari area kerja dan dicatat',
+  'A|Sampel uji diambil untuk material yang disyaratkan (frekuensi: spek proyek)']},
+ {id:'q2',name:'RFI dan hold / witness point',std:['Prosedur mutu proyek','Checklist pekerjaan terkait'],s:[
+  'P|Kontraktor mengajukan RFI tertulis sebelum pekerjaan ditutup',
+  'S|QC memeriksa terhadap gambar kerja dan checklist pekerjaan',
+  'S!|Hold point: pekerjaan berikutnya tidak dimulai sebelum persetujuan tertulis',
+  'S|Witness point: MK dan pemilik diundang, ketidakhadiran dicatat',
+  'A|Hasil RFI: disetujui, disetujui dengan catatan, atau ditolak, lengkap tanda tangan dan tanggal',
+  'A|RFI diarsipkan per pekerjaan dan area']},
+ {id:'q3',name:'Uji beton',std:['SNI 1972:2008 (slump)','SNI 4810:2013 (benda uji lapangan)','SNI 2493:2011 (benda uji lab)','SNI 1974:2011 (kuat tekan)','SNI 2847:2019'],s:[
+  'P|Laboratorium disetujui MK dan alat uji terkalibrasi',
+  'S|Slump diuji dan dicatat per truk atau per sampel',
+  'S|Silinder diberi label: tanggal, lokasi, mutu, nomor truk',
+  'S|Perawatan awal benda uji sesuai standar',
+  'A|Uji tekan pada umur yang ditetapkan spesifikasi',
+  'A!|Hasil dievaluasi dengan kalkulator Evaluasi kuat tekan, tidak lulus berarti NCR',
+  'A|Bila tidak lulus, usulkan uji lanjutan (core drill atau NDT) ke MK sesuai SNI 2847:2019']},
+ {id:'q4',name:'Uji tarik baja tulangan',std:['SNI 2052:2017'],s:[
+  'P|Sampel diambil dari tiap diameter dan batch (frekuensi: spek proyek)',
+  'S|Sampel diberi label dan pemotongan disaksikan QC',
+  'A!|Hasil uji (leleh, tarik, regangan) dibandingkan syarat SNI 2052:2017 untuk mutu terkait',
+  'A|Batch tidak lulus dikarantina dan dilaporkan sebagai NCR']},
+ {id:'q5',name:'Survey dan toleransi geometri',std:['Gambar kerja','Spesifikasi (toleransi)'],s:[
+  'P|Titik referensi (benchmark dan as) terverifikasi',
+  'S|As, elevasi, dan ketegakan diukur lalu dibandingkan dengan gambar',
+  'A!|Deviasi di luar toleransi: pekerjaan berikutnya dihentikan, terbitkan NCR',
+  'A|Hasil ukur masuk ke as-built']},
+ {id:'q6',name:'NCR dan tindakan korektif',std:['ISO 9001:2015 klausul 8.7 dan 10.2','Prosedur mutu proyek'],s:[
+  'P|Ketidaksesuaian diidentifikasi terhadap gambar, spesifikasi, atau standar',
+  'S|Lokasi, foto bukti, dan tingkat (minor, mayor, kritis) dicatat',
+  'S!|Mayor atau kritis: pekerjaan terkait dihentikan sampai ada disposisi',
+  'S|Akar masalah, tindakan korektif, dan tindakan pencegahan ditetapkan',
+  'A|Tindakan diverifikasi dan NCR ditutup dengan persetujuan MK',
+  'A|Rekap NCR mingguan dibawa ke rapat mutu']},
+ {id:'q7',name:'K3 konstruksi di lapangan',std:['Permen PUPR 10/2021 (SMKK)'],s:[
+  'P|Izin kerja berisiko tinggi (ketinggian, galian, listrik, angkat) tersedia',
+  'S|APD lengkap, area kerja berpagar dan bertanda',
+  'S|Perancah, tangga, dan alat angkat diperiksa dan bertanda layak',
+  'S|Toolbox meeting harian tercatat',
+  'A!|Temuan K3 dilaporkan dan ditindak sebelum pekerjaan dilanjutkan',
+  'A|Insiden dan near miss dicatat serta dilaporkan sesuai prosedur']},
+ {id:'q8',name:'Serah terima dan punch list',std:['Kontrak','UU 2/2017 tentang Jasa Konstruksi'],s:[
+  'P|Kontraktor menyatakan pekerjaan selesai dan mengajukan inspeksi',
+  'S|Inspeksi bersama (MK, pemilik, kontraktor) per area dan sistem',
+  'S|Punch list dicatat per lokasi dengan penanggung jawab dan tenggat',
+  'S!|Serah terima pertama (PHO) hanya setelah punch list kritis selesai',
+  'A|As-built, manual, sertifikat uji, dan garansi lengkap',
+  'A|Masa pemeliharaan dan serah terima akhir sesuai kontrak']}
+]}};
+const ROLES=['csa','mep','qc'];
+const PH={P:'Sebelum kerja',S:'Saat kerja',A:'Setelah kerja'};
+const KEY='siteguide-ckd-v1';
+const DEF={project:'Batik Project - Safran',contractor:'PT Citra Karsa Dinamika',area:'',user:''};
+let S={v:2,meta:{...DEF},role:'csa',checks:{},notes:{},ncr:[]};
+try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);S=Object.assign(S,o);S.v=o.v||1;const m=o.meta||{};S.meta={project:m.project||DEF.project,contractor:m.contractor||DEF.contractor,area:m.area||'',user:m.user||''}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const parse=s=>{const i=s.indexOf('|');const k=s.slice(0,i);return{ph:k[0],hp:k.endsWith('!'),t:s.slice(i+1)}};
+/* Centang disimpan per kunci langkah (hash teks), bukan urutan, agar penambahan atau pengurutan ulang langkah tidak menggeser progres lama. */
+const hk=t=>{let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;return (h>>>0).toString(36)};
+const allJobs=()=>ROLES.flatMap(r=>R[r].jobs.map(j=>({...j,role:r})));
+if(S.v!==2){allJobs().forEach(j=>{const c=S.checks[j.id];if(!c)return;const n={};Object.keys(c).forEach(k=>{if(/^\d+$/.test(k)&&j.s[k]&&c[k])n[hk(parse(j.s[k]).t)]=true});S.checks[j.id]=n});S.v=2;save()}
+function jobStats(j){const c=S.checks[j.id]||{};let d=0,hpOpen=0;j.s.forEach(x=>{const p=parse(x);if(c[hk(p.t)])d++;else if(p.hp)hpOpen++});return{d,n:j.s.length,hpOpen}}
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2200)}
+
+/* peran */
+function projLine(){const m=S.meta;$('#projLine').textContent=[m.project,m.contractor,m.user].filter(Boolean).join(' · ')}
+function renderRoles(){
+  $('#roleSeg').innerHTML=ROLES.map(r=>`<button type="button" data-r="${r}" aria-pressed="${S.role===r}">${R[r].label}<span>${esc(R[r].sub.split(' · ')[0])}</span></button>`).join('');
+  $('#roleSub').textContent=R[S.role].sub;
+  $('#roleTitle').textContent='Checklist '+R[S.role].label;projLine();
+}
+function badge(st){return st.hpOpen?`<span class="pill hp">HP ${st.hpOpen}</span>`:(st.d===st.n?'<span class="pill ok">SELESAI</span>':'')}
+function renderJobs(){
+  const open=new Set([...document.querySelectorAll('details.job[open]')].map(d=>d.dataset.job));
+  $('#jobs').innerHTML=R[S.role].jobs.map(j=>{
+    const st=jobStats(j),c=S.checks[j.id]||{};let last='',html='';
+    j.s.forEach((x,i)=>{const p=parse(x);
+      if(p.ph!==last){html+=`<div class="ph">${PH[p.ph]}</div>`;last=p.ph}
+      html+=`<label class="step${p.hp?' hp':''}"><input type="checkbox" data-j="${j.id}" data-k="${hk(p.t)}"${c[hk(p.t)]?' checked':''}><span class="st">${esc(p.t)}${p.hp?'<span class="tag">HOLD POINT</span>':''}</span></label>`});
+    return `<details class="job" data-job="${j.id}"${open.has(j.id)?' open':''}>
+      <summary><span class="jname">${esc(j.name)}</span><span class="jmeta"><span class="cnt">${st.d}/${st.n}</span><span class="bdg">${badge(st)}</span></span><span class="bar"><i style="width:${Math.round(st.d/st.n*100)}%"></i></span></summary>
+      <div class="jbody"><div class="stds">${j.std.map(s=>`<span>${esc(s)}</span>`).join('')}</div>${html}
+      <textarea data-note="${j.id}" placeholder="Catatan lapangan: lokasi, temuan, nomor RFI">${esc(S.notes[j.id]||'')}</textarea>
+      <div class="row"><button type="button" class="btn ghost small" data-reset="${j.id}">Kosongkan checklist</button></div></div></details>`}).join('');
+}
+function refreshJob(id){
+  const j=allJobs().find(x=>x.id===id),el=$(`details[data-job="${id}"]`);if(!j||!el)return;
+  const st=jobStats(j);$('.cnt',el).textContent=st.d+'/'+st.n;$('.bdg',el).innerHTML=badge(st);$('.bar i',el).style.width=Math.round(st.d/st.n*100)+'%';
+}
+$('#roleSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;S.role=b.dataset.r;save();renderRoles();renderJobs();fillJobSelect()});
+const jobsEl=$('#jobs');
+jobsEl.addEventListener('change',e=>{const t=e.target;if(t.type!=='checkbox')return;const id=t.dataset.j;(S.checks[id]=S.checks[id]||{})[t.dataset.k]=t.checked;save();refreshJob(id)});
+jobsEl.addEventListener('input',e=>{const id=e.target.dataset.note;if(id){S.notes[id]=e.target.value;save()}});
+let resetArm=null;
+jobsEl.addEventListener('click',e=>{const b=e.target.closest('[data-reset]');if(!b)return;const id=b.dataset.reset;
+  if(resetArm!==id){resetArm=id;b.textContent='Ketuk lagi untuk mengosongkan';b.classList.add('warn');setTimeout(()=>{if(resetArm===id){resetArm=null;b.textContent='Kosongkan checklist';b.classList.remove('warn')}},3000);return}
+  resetArm=null;delete S.checks[id];save();renderJobs()});
+
+/* NCR */
+function fillJobSelect(){
+  $('#nJob').innerHTML=ROLES.map(r=>`<optgroup label="${R[r].label}">${R[r].jobs.map(j=>`<option value="${j.id}">${esc(j.name)}</option>`).join('')}</optgroup>`).join('');
+  $('#nJob').value=R[S.role].jobs[0].id;
+}
+const LV={Minor:'mid',Mayor:'hp',Kritis:'bad'};
+const ST=['Terbuka','Dalam perbaikan','Tutup'],STC={Terbuka:'bad','Dalam perbaikan':'hp',Tutup:'ok'};
+function ncrText(n){const j=allJobs().find(x=>x.id===n.job);return `${n.no} [${n.level}]\nProyek: ${S.meta.project}\nPelapor: ${n.by||'-'}\nLokasi: ${n.area}\nPekerjaan: ${j?j.name:'-'}\nTemuan: ${n.desc}\nTindakan korektif: ${n.act||'-'}\nBatas waktu: ${n.due||'-'}\nStatus: ${n.status}`}
+function renderNcr(){
+  const el=$('#ncrList');
+  if(!S.ncr.length){el.innerHTML='<div class="empty">Belum ada NCR. Isi formulir di atas saat menemukan pekerjaan yang tidak sesuai gambar atau standar.</div>';return}
+  el.innerHTML=S.ncr.slice().reverse().map(n=>{const j=allJobs().find(x=>x.id===n.job);
+    return `<article class="ncr"><header><b>${esc(n.no)}</b><span><span class="pill ${LV[n.level]}">${esc(n.level.toUpperCase())}</span> <span class="pill ${STC[n.status]}">${esc(n.status.toUpperCase())}</span></span></header>
+    ${n.by?`<p class="k">Pelapor ${esc(n.by)}</p>`:''}<p><span class="k">Lokasi</span><br>${esc(n.area)}</p><p><span class="k">${esc(j?j.name:'')}</span><br>${esc(n.desc)}</p>
+    ${n.act?`<p><span class="k">Tindakan korektif</span><br>${esc(n.act)}</p>`:''}${n.due?`<p class="k">Batas waktu ${esc(n.due)}</p>`:''}
+    <div class="row"><button class="btn small" data-st="${n.id}">Ubah status</button><button class="btn ghost small" data-cp="${n.id}">Salin</button><button class="btn ghost small" data-del="${n.id}">Hapus</button></div></article>`}).join('');
+}
+$('#ncrForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const d=new Date(),ymd=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  const nn=S.ncr.filter(x=>x.no.includes(ymd)).length+1;
+  S.ncr.push({id:Date.now().toString(36),no:`NCR-${ymd}-${String(nn).padStart(2,'0')}`,area:$('#nArea').value.trim(),level:$('#nLevel').value,job:$('#nJob').value,desc:$('#nDesc').value.trim(),act:$('#nAct').value.trim(),due:$('#nDue').value,by:S.meta.user||'',status:'Terbuka'});
+  save();renderNcr();$('#nArea').value='';$('#nDesc').value='';$('#nAct').value='';$('#nDue').value='';toast('NCR tersimpan');
+});
+let delArm=null;
+$('#ncrList').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.st){const n=S.ncr.find(x=>x.id===b.dataset.st);n.status=ST[(ST.indexOf(n.status)+1)%3];save();renderNcr()}
+  else if(b.dataset.cp){copyText(ncrText(S.ncr.find(x=>x.id===b.dataset.cp)))}
+  else if(b.dataset.del){const id=b.dataset.del;if(delArm!==id){delArm=id;b.textContent='Ketuk lagi';b.classList.add('warn');setTimeout(()=>{delArm=null;renderNcr()},2500);return}
+    delArm=null;S.ncr=S.ncr.filter(x=>x.id!==id);save();renderNcr()}
+});
+function copyText(t,ta){
+  const fb=()=>{if(ta){ta.focus();ta.select()}toast('Pilih teks lalu salin manual')};
+  try{navigator.clipboard.writeText(t).then(()=>toast('Tersalin'),fb)}catch(e){fb()}
+}
+
+/* alat uji */
+$('#evalBtn').addEventListener('click',()=>{
+  const fc=parseFloat($('#fc').value);
+  const v=$('#hasil').value.split(/[\s;]+/).map(x=>parseFloat(x.replace(',','.'))).filter(x=>!isNaN(x));
+  const out=$('#evalOut');
+  if(!(fc>0)||v.length<3){out.innerHTML='<span class="pill bad">DATA KURANG</span> Isi f\'c dan minimal 3 hasil uji.';return}
+  const lim=fc<=35?fc-3.5:0.9*fc;
+  const ind=v.map((x,i)=>({x,i,ok:x>=lim}));
+  const win=[];for(let i=0;i+2<v.length;i++){const a=(v[i]+v[i+1]+v[i+2])/3;win.push({i,a,ok:a>=fc})}
+  const ok=ind.every(x=>x.ok)&&win.every(x=>x.ok);
+  out.innerHTML=`<div><span class="pill ${ok?'ok':'bad'}">${ok?'MEMENUHI':'TIDAK MEMENUHI'}</span></div>
+  <ul>${win.map(w=>`<li><span class="mono">Rata-rata hasil ${w.i+1}-${w.i+3}: ${w.a.toFixed(1)} MPa</span><span class="pill ${w.ok?'ok':'bad'}">${w.ok?'≥':'<'} f'c ${fc}</span></li>`).join('')}
+  ${ind.map(x=>`<li><span class="mono">Hasil ${x.i+1}: ${x.x.toFixed(1)} MPa</span><span class="pill ${x.ok?'ok':'bad'}">${x.ok?'≥':'<'} batas ${lim.toFixed(1)}</span></li>`).join('')}</ul>
+  <p class="sub" style="margin-top:10px">Batas hasil individu: f'c − 3,5 MPa bila f'c ≤ 35 MPa, atau 0,90 f'c bila f'c > 35 MPa.${ok?'':' Terbitkan NCR dan ajukan uji lanjutan ke MK.'}</p>`;
+});
+$('#smpBtn').addEventListener('click',()=>{
+  const v=parseFloat($('#vol').value)||0,a=parseFloat($('#luas').value)||0;
+  const byV=Math.ceil(v/110),byA=Math.ceil(a/460),n=Math.max(1,byV,byA);
+  $('#smpOut').innerHTML=`<span class="pill ok mono">MINIMAL ${n} SET</span><ul><li class="mono">Per hari: 1 set</li><li class="mono">Per 110 m³: ${byV} set (${v} m³)</li><li class="mono">Per 460 m²: ${byA} set (${a} m²)</li></ul>`;
+});
+
+/* rekap */
+function report(){
+  const d=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  let t=`LAPORAN HARIAN SITEGUIDE\n${d}\nProyek: ${S.meta.project||'-'}\nKontraktor: ${S.meta.contractor||'-'}\nArea: ${S.meta.area||'-'}\nDisusun oleh: ${S.meta.user||'-'} (${R[S.role].label})\n`;
+  ROLES.forEach(r=>{t+=`\n${R[r].label}\n`;R[r].jobs.forEach(j=>{const st=jobStats(j);t+=`- ${j.name}: ${st.d}/${st.n}${st.hpOpen?` | hold point belum: ${st.hpOpen}`:''}\n`})});
+  const open=S.ncr.filter(n=>n.status!=='Tutup');
+  t+=`\nNCR terbuka: ${open.length} dari ${S.ncr.length}\n`;open.forEach(n=>{t+=`- ${n.no} [${n.level}] ${n.area}: ${n.desc}\n`});
+  return t;
+}
+function renderRekap(){
+  $('#mProj').value=S.meta.project;$('#mCon').value=S.meta.contractor;$('#mArea').value=S.meta.area;$('#mUser').value=S.meta.user;
+  $('#sumTbl').innerHTML='<table class="sum"><tr><th>Pekerjaan</th><th>Hold point</th><th>Progres</th></tr>'+allJobs().map(j=>{const st=jobStats(j);
+    return `<tr><td>${esc(j.name)}<br><span class="k" style="font:11px var(--f-mono);color:var(--muted)">${R[j.role].label}</span></td><td>${st.hpOpen?`<span class="pill hp">${st.hpOpen} BELUM</span>`:'<span class="pill ok">AMAN</span>'}</td><td class="n">${st.d}/${st.n}</td></tr>`}).join('')+'</table>';
+  $('#report').value=report();
+}
+[['mProj','project'],['mCon','contractor'],['mArea','area'],['mUser','user']].forEach(([id,k])=>$('#'+id).addEventListener('input',e=>{S.meta[k]=e.target.value;save();projLine();$('#report').value=report()}));
+$('#copyBtn').addEventListener('click',()=>copyText($('#report').value,$('#report')));
+let wipeArm=false;
+$('#wipeBtn').addEventListener('click',e=>{const b=e.target;
+  if(!wipeArm){wipeArm=true;b.textContent='Ketuk lagi untuk menghapus semua';b.classList.add('warn');setTimeout(()=>{wipeArm=false;b.textContent='Hapus semua data';b.classList.remove('warn')},3500);return}
+  wipeArm=false;b.textContent='Hapus semua data';b.classList.remove('warn');
+  S={v:2,meta:S.meta,role:S.role,seen:S.seen,checks:{},notes:{},ncr:[]};save();renderJobs();renderNcr();renderRekap();toast('Data dihapus')});
+
+/* routing hash */
+const TABS=['checklist','ncr','alat','rekap','panduan'];
+function route(){
+  const h=location.hash.slice(1),t=TABS.includes(h)?h:'checklist';
+  TABS.forEach(x=>{$('#'+x).hidden=x!==t});
+  document.querySelectorAll('.tabs a').forEach(a=>{if(a.dataset.t===t)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(t==='rekap')renderRekap();
+  if(t==='panduan'&&!S.seen){S.seen=true;save();$('#firstRun').hidden=true}
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+/* latihan */
+const QZ=[
+ {q:"Pembesian kolom selesai dipasang. Apa langkah berikutnya sebelum pengecoran?",o:["Memesan beton agar truk bisa datang pagi","Mengajukan RFI dan menunggu persetujuan tertulis QC dan MK","Meminta mandor memastikan sendiri bahwa pembesian benar"],a:1,e:"Inspeksi pembesian adalah hold point. Pekerjaan berikutnya tidak boleh mulai tanpa persetujuan tertulis."},
+ {q:"Slump truk ketiga berada di luar batas spesifikasi. Apa tindakannya?",o:["Tolak truk, catat hasilnya, dan jangan dicor","Tambahkan air di lokasi lalu cor","Cor di area yang tidak struktural"],a:0,e:"Beton di luar batas spesifikasi ditolak. Menambah air di lokasi mengubah kualitas beton."},
+ {q:"Rata-rata tiga hasil uji tekan berturut-turut lebih rendah dari f'c. Apa yang dilakukan?",o:["Mengubah f'c rencana agar hasil lolos","Menunggu beberapa hari lalu menguji ulang tanpa melapor","Mengevaluasi di tab Alat uji, menerbitkan NCR, dan mengajukan uji lanjutan ke MK"],a:2,e:"Hasil di bawah kriteria SNI 2847:2019 berarti tidak memenuhi. Laporkan lewat NCR dan ajukan uji lanjutan (core drill atau NDT) ke MK."},
+ {q:"Hollow test menemukan keramik berongga di area basah. Apa yang paling tepat?",o:["Menutup dengan nat agar tidak terlihat","Mengabaikan karena areanya kecil","Mencatat NCR dengan lokasi dan tingkat temuan, memperbaiki, lalu uji ulang"],a:2,e:"Temuan dicatat agar bisa dilacak sampai tutup, dan perbaikan harus diuji ulang."},
+ {q:"Di mana data checklist dan NCR Anda disimpan?",o:["Di server pusat yang bisa dilihat semua orang","Di browser perangkat ini saja, jadi laporan perlu disalin dan dikirim","Di akun email Anda"],a:1,e:"Tidak ada sinkronisasi. Pakai Salin laporan di tab Rekap untuk berbagi, dan jangan hapus data browser."}
+];
+let qa=QZ.map(()=>null);
+function renderQuiz(){
+  const n=qa.filter((a,i)=>a===QZ[i].a).length,d=qa.filter(a=>a!==null).length;
+  $('#quiz').innerHTML=QZ.map((z,i)=>`<fieldset class="qz"><legend>${i+1}. ${esc(z.q)}</legend>${z.o.map((o,k)=>{const a=qa[i];let c='';if(a!==null){if(k===z.a)c=' ok';else if(k===a)c=' bad'}return `<button type="button" class="qo${c}" data-q="${i}" data-k="${k}"${a!==null?' disabled':''}>${esc(o)}</button>`}).join('')}${qa[i]!==null?`<p class="qe">${qa[i]===z.a?'Benar. ':'Belum tepat. '}${esc(z.e)}</p>`:''}</fieldset>`).join('')
+   +(d?`<div class="row" style="align-items:center"><span class="pill ${n===QZ.length?'ok':'mid'}">SKOR ${n}/${QZ.length}</span>${d===QZ.length?'<button type="button" class="btn ghost small" id="quizReset">Ulangi</button>':''}</div>`:'');
+}
+$('#quiz').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.id==='quizReset'){qa=QZ.map(()=>null);renderQuiz();return}
+  if(b.dataset.q!==undefined){qa[+b.dataset.q]=+b.dataset.k;renderQuiz()}
+});
+renderQuiz();
+$('#firstRun').hidden=!!S.seen;
+$('#hideFirst').addEventListener('click',()=>{S.seen=true;save();$('#firstRun').hidden=true});
+renderRoles();renderJobs();fillJobSelect();renderNcr();route();
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script></html>
