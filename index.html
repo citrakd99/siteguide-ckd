@@ -225,6 +225,14 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
         <label class="f">Area / lantai<input type="text" id="mArea" placeholder="Area kerja"></label>
       </div>
     </div>
+    <div class="card">
+      <h3>Sinkronisasi Google Sheets</h3>
+      <p class="sub" style="margin:0">Kirim checklist, NCR, dan rekap ke Sheet terpusat. Bila sinyal hilang, data menunggu di HP lalu terkirim otomatis.</p>
+      <label class="f">Alamat Web App<input type="text" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <label class="f">Kode rahasia<input type="password" id="sTok" autocomplete="off"></label>
+      <div class="row"><button class="btn" id="sSave" type="button">Simpan dan tes</button><button class="btn ghost" id="sNow" type="button">Kirim sekarang</button><button class="btn ghost" id="sRekap" type="button">Kirim rekap</button></div>
+      <div class="res" id="syncStat" aria-live="polite"></div>
+    </div>
     <div class="card"><div class="tscroll" id="sumTbl"></div></div>
     <div class="card">
       <h3>Laporan</h3>
@@ -609,8 +617,9 @@ const ROLES=['csa','mep','qc'];
 const PH={P:'Sebelum kerja',S:'Saat kerja',A:'Setelah kerja'};
 const KEY='siteguide-ckd-v1';
 const DEF={project:'Batik Project - Safran',contractor:'PT Citra Karsa Dinamika',area:'',user:''};
-let S={v:2,meta:{...DEF},role:'csa',checks:{},notes:{},ncr:[]};
-try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);S=Object.assign(S,o);S.v=o.v||1;const m=o.meta||{};S.meta={project:m.project||DEF.project,contractor:m.contractor||DEF.contractor,area:m.area||'',user:m.user||''}}}catch(e){}
+const SYNC_DEFAULT={url:'',token:''};
+let S={v:2,meta:{...DEF},role:'csa',checks:{},notes:{},ncr:[],sync:{...SYNC_DEFAULT,last:'',err:''}};
+try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);S=Object.assign(S,o);S.v=o.v||1;const m=o.meta||{};S.meta={project:m.project||DEF.project,contractor:m.contractor||DEF.contractor,area:m.area||'',user:m.user||''};const y=o.sync||{};S.sync={url:y.url||SYNC_DEFAULT.url,token:y.token||SYNC_DEFAULT.token,last:y.last||'',err:''}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const $=(s,r=document)=>r.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -621,6 +630,39 @@ const allJobs=()=>ROLES.flatMap(r=>R[r].jobs.map(j=>({...j,role:r})));
 if(S.v!==2){allJobs().forEach(j=>{const c=S.checks[j.id];if(!c)return;const n={};Object.keys(c).forEach(k=>{if(/^\d+$/.test(k)&&j.s[k]&&c[k])n[hk(parse(j.s[k]).t)]=true});S.checks[j.id]=n});S.v=2;save()}
 function jobStats(j){const c=S.checks[j.id]||{};let d=0,hpOpen=0;j.s.forEach(x=>{const p=parse(x);if(c[hk(p.t)])d++;else if(p.hp)hpOpen++});return{d,n:j.s.length,hpOpen}}
 let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2200)}
+
+/* sinkronisasi: antrean kejadian (append-only), dikirim ke Apps Script */
+const QK='siteguide-ckd-queue-v1';
+let Q=[];try{Q=JSON.parse(localStorage.getItem(QK)||'[]')}catch(e){}
+function saveQ(){try{localStorage.setItem(QK,JSON.stringify(Q))}catch(e){}}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function ev(type,data){
+  Q.push({id:uid(),t:new Date().toISOString(),type,project:S.meta.project,contractor:S.meta.contractor,user:S.meta.user,role:R[S.role].label,area:S.meta.area,...data});
+  saveQ();syncSoon();renderSync();
+}
+function ncrEv(n){const j=allJobs().find(x=>x.id===n.job);ev('ncr',{ncrId:n.id,no:n.no,level:n.level,jobName:j?j.name:'',lokasi:n.area,desc:n.desc,act:n.act,due:n.due,status:n.status,by:n.by})}
+let syncT,busy=false;
+function syncSoon(){clearTimeout(syncT);syncT=setTimeout(flush,2500)}
+async function post(events){
+  const r=await fetch(S.sync.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({token:S.sync.token,events})});
+  return r.json();
+}
+async function flush(){
+  if(busy||!Q.length||!S.sync.url||!navigator.onLine)return;
+  busy=true;const batch=Q.slice(0,50);let more=false;
+  try{
+    const j=await post(batch);
+    if(j.ok){const ids=new Set(batch.map(x=>x.id));Q=Q.filter(x=>!ids.has(x.id));saveQ();S.sync.last=new Date().toISOString();S.sync.err='';more=Q.length>0}
+    else S.sync.err=j.error||'Ditolak server';
+  }catch(e){S.sync.err='Tidak terhubung'}
+  save();busy=false;renderSync();if(more)flush();
+}
+function renderSync(){
+  const el=$('#syncStat');if(!el)return;
+  const w=S.sync.last?new Date(S.sync.last).toLocaleString('id-ID'):'belum pernah';
+  const st=S.sync.url?(S.sync.err?['bad','GAGAL']:['ok','AKTIF']):['mid','BELUM DIATUR'];
+  el.innerHTML=`<span class="pill ${st[0]}">${st[1]}</span> <span class="mono">Antrean ${Q.length} · terakhir ${esc(w)}</span>${S.sync.err?`<p class="sub" style="margin:6px 0 0">${esc(S.sync.err)}</p>`:''}`;
+}
 
 /* peran */
 function projLine(){const m=S.meta;$('#projLine').textContent=[m.project,m.contractor,m.user].filter(Boolean).join(' · ')}
@@ -649,7 +691,8 @@ function refreshJob(id){
 }
 $('#roleSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;S.role=b.dataset.r;save();renderRoles();renderJobs();fillJobSelect()});
 const jobsEl=$('#jobs');
-jobsEl.addEventListener('change',e=>{const t=e.target;if(t.type!=='checkbox')return;const id=t.dataset.j;(S.checks[id]=S.checks[id]||{})[t.dataset.k]=t.checked;save();refreshJob(id)});
+jobsEl.addEventListener('change',e=>{const t=e.target;if(t.type!=='checkbox')return;const id=t.dataset.j;(S.checks[id]=S.checks[id]||{})[t.dataset.k]=t.checked;save();refreshJob(id);
+  const jj=allJobs().find(x=>x.id===id);ev('check',{job:id,jobName:jj?jj.name:id,step:t.nextElementSibling.firstChild.textContent,checked:t.checked})});
 jobsEl.addEventListener('input',e=>{const id=e.target.dataset.note;if(id){S.notes[id]=e.target.value;save()}});
 let resetArm=null;
 jobsEl.addEventListener('click',e=>{const b=e.target.closest('[data-reset]');if(!b)return;const id=b.dataset.reset;
@@ -678,15 +721,15 @@ $('#ncrForm').addEventListener('submit',e=>{
   const d=new Date(),ymd=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
   const nn=S.ncr.filter(x=>x.no.includes(ymd)).length+1;
   S.ncr.push({id:Date.now().toString(36),no:`NCR-${ymd}-${String(nn).padStart(2,'0')}`,area:$('#nArea').value.trim(),level:$('#nLevel').value,job:$('#nJob').value,desc:$('#nDesc').value.trim(),act:$('#nAct').value.trim(),due:$('#nDue').value,by:S.meta.user||'',status:'Terbuka'});
-  save();renderNcr();$('#nArea').value='';$('#nDesc').value='';$('#nAct').value='';$('#nDue').value='';toast('NCR tersimpan');
+  ncrEv(S.ncr[S.ncr.length-1]);save();renderNcr();$('#nArea').value='';$('#nDesc').value='';$('#nAct').value='';$('#nDue').value='';toast('NCR tersimpan');
 });
 let delArm=null;
 $('#ncrList').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.st){const n=S.ncr.find(x=>x.id===b.dataset.st);n.status=ST[(ST.indexOf(n.status)+1)%3];save();renderNcr()}
+  if(b.dataset.st){const n=S.ncr.find(x=>x.id===b.dataset.st);n.status=ST[(ST.indexOf(n.status)+1)%3];ncrEv(n);save();renderNcr()}
   else if(b.dataset.cp){copyText(ncrText(S.ncr.find(x=>x.id===b.dataset.cp)))}
   else if(b.dataset.del){const id=b.dataset.del;if(delArm!==id){delArm=id;b.textContent='Ketuk lagi';b.classList.add('warn');setTimeout(()=>{delArm=null;renderNcr()},2500);return}
-    delArm=null;S.ncr=S.ncr.filter(x=>x.id!==id);save();renderNcr()}
+    delArm=null;const dn=S.ncr.find(x=>x.id===id);if(dn)ncrEv({...dn,status:'Dihapus'});S.ncr=S.ncr.filter(x=>x.id!==id);save();renderNcr()}
 });
 function copyText(t,ta){
   const fb=()=>{if(ta){ta.focus();ta.select()}toast('Pilih teks lalu salin manual')};
@@ -724,18 +767,27 @@ function report(){
   return t;
 }
 function renderRekap(){
-  $('#mProj').value=S.meta.project;$('#mCon').value=S.meta.contractor;$('#mArea').value=S.meta.area;$('#mUser').value=S.meta.user;
+  $('#mProj').value=S.meta.project;$('#mCon').value=S.meta.contractor;$('#mArea').value=S.meta.area;$('#mUser').value=S.meta.user;$('#sUrl').value=S.sync.url;$('#sTok').value=S.sync.token;renderSync();
   $('#sumTbl').innerHTML='<table class="sum"><tr><th>Pekerjaan</th><th>Hold point</th><th>Progres</th></tr>'+allJobs().map(j=>{const st=jobStats(j);
     return `<tr><td>${esc(j.name)}<br><span class="k" style="font:11px var(--f-mono);color:var(--muted)">${R[j.role].label}</span></td><td>${st.hpOpen?`<span class="pill hp">${st.hpOpen} BELUM</span>`:'<span class="pill ok">AMAN</span>'}</td><td class="n">${st.d}/${st.n}</td></tr>`}).join('')+'</table>';
   $('#report').value=report();
 }
 [['mProj','project'],['mCon','contractor'],['mArea','area'],['mUser','user']].forEach(([id,k])=>$('#'+id).addEventListener('input',e=>{S.meta[k]=e.target.value;save();projLine();$('#report').value=report()}));
+$('#sSave').addEventListener('click',async()=>{
+  S.sync.url=$('#sUrl').value.trim();S.sync.token=$('#sTok').value.trim();S.sync.err='';
+  if(!S.sync.url){save();renderSync();toast('Isi alamat Web App');return}
+  try{const j=await post([]);if(j.ok){toast('Terhubung');save();renderSync();flush();return}S.sync.err=j.error||'Ditolak server'}
+  catch(e){S.sync.err='Tidak terhubung. Cek alamat dan koneksi.'}
+  save();renderSync();
+});
+$('#sNow').addEventListener('click',()=>{S.sync.err='';flush().then(()=>toast(Q.length?'Antrean belum kosong':'Antrean kosong'))});
+$('#sRekap').addEventListener('click',()=>{ev('rekap',{text:report()});toast('Rekap masuk antrean')});
 $('#copyBtn').addEventListener('click',()=>copyText($('#report').value,$('#report')));
 let wipeArm=false;
 $('#wipeBtn').addEventListener('click',e=>{const b=e.target;
   if(!wipeArm){wipeArm=true;b.textContent='Ketuk lagi untuk menghapus semua';b.classList.add('warn');setTimeout(()=>{wipeArm=false;b.textContent='Hapus semua data';b.classList.remove('warn')},3500);return}
   wipeArm=false;b.textContent='Hapus semua data';b.classList.remove('warn');
-  S={v:2,meta:S.meta,role:S.role,seen:S.seen,checks:{},notes:{},ncr:[]};save();renderJobs();renderNcr();renderRekap();toast('Data dihapus')});
+  S={v:2,meta:S.meta,role:S.role,seen:S.seen,sync:S.sync,checks:{},notes:{},ncr:[]};save();renderJobs();renderNcr();renderRekap();toast('Data dihapus')});
 
 /* routing hash */
 const TABS=['checklist','ncr','alat','rekap','panduan'];
@@ -771,5 +823,7 @@ renderQuiz();
 $('#firstRun').hidden=!!S.seen;
 $('#hideFirst').addEventListener('click',()=>{S.seen=true;save();$('#firstRun').hidden=true});
 renderRoles();renderJobs();fillJobSelect();renderNcr();route();
+window.addEventListener('online',()=>flush());
+flush();
 </script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script></html>
