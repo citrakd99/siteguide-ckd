@@ -216,7 +216,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
 
   <section id="rekap" hidden>
     <h2>Rekap Harian</h2>
-    <p class="sub">Progres checklist semua peran dan laporan siap tempel ke WhatsApp.</p>
+    <p class="sub" id="rekapSub"></p>
     <div class="card">
       <div class="grid2">
         <label class="f">Proyek<input type="text" id="mProj" placeholder="Nama proyek"></label>
@@ -267,7 +267,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
         <li class="hps"><b>Hold point: ajukan RFI</b><span>Pekerjaan berhenti. QC dan MK memeriksa lalu memberi persetujuan tertulis. Tanpa itu, pekerjaan berikutnya tidak boleh mulai.</span></li>
         <li><b>Lanjutkan dan selesaikan</b><span>Setelah disetujui, teruskan sampai langkah "Setelah kerja": uji, perbaikan, dan dokumentasi.</span></li>
         <li><b>Ada yang tidak sesuai? Terbitkan NCR</b><span>Catat lokasi, uraian, dan tindakan korektif di tab NCR. Ubah statusnya sampai Tutup.</span></li>
-        <li><b>Laporkan</b><span>Tab Rekap menampilkan progres semua pekerjaan. Salin laporan lalu kirim ke grup.</span></li>
+        <li><b>Laporkan</b><span>Tab Rekap menampilkan progres pekerjaan sesuai peran yang dipilih di atas. Salin laporan lalu kirim ke grup.</span></li>
       </ol>
     </div>
 
@@ -689,7 +689,7 @@ function refreshJob(id){
   const j=allJobs().find(x=>x.id===id),el=$(`details[data-job="${id}"]`);if(!j||!el)return;
   const st=jobStats(j);$('.cnt',el).textContent=st.d+'/'+st.n;$('.bdg',el).innerHTML=badge(st);$('.bar i',el).style.width=Math.round(st.d/st.n*100)+'%';
 }
-$('#roleSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;S.role=b.dataset.r;save();renderRoles();renderJobs();fillJobSelect()});
+$('#roleSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;S.role=b.dataset.r;save();renderRoles();renderJobs();fillJobSelect();if(!$('#rekap').hidden)renderRekap()});
 const jobsEl=$('#jobs');
 jobsEl.addEventListener('change',e=>{const t=e.target;if(t.type!=='checkbox')return;const id=t.dataset.j;(S.checks[id]=S.checks[id]||{})[t.dataset.k]=t.checked;save();refreshJob(id);
   const jj=allJobs().find(x=>x.id===id);ev('check',{job:id,jobName:jj?jj.name:id,step:t.nextElementSibling.firstChild.textContent,checked:t.checked})});
@@ -758,17 +758,21 @@ $('#smpBtn').addEventListener('click',()=>{
 });
 
 /* rekap */
+/* Cakupan rekap mengikuti peran terpilih. QC melihat NCR semua peran, SPV CSA dan SPV MEP melihat NCR pada pekerjaannya. */
+const scopeJobs=()=>R[S.role].jobs.map(j=>({...j,role:S.role}));
+const scopeNcr=()=>S.role==='qc'?S.ncr:S.ncr.filter(n=>{const j=allJobs().find(x=>x.id===n.job);return j&&j.role===S.role});
 function report(){
   const d=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   let t=`LAPORAN HARIAN SITEGUIDE\n${d}\nProyek: ${S.meta.project||'-'}\nKontraktor: ${S.meta.contractor||'-'}\nArea: ${S.meta.area||'-'}\nDisusun oleh: ${S.meta.user||'-'} (${R[S.role].label})\n`;
-  ROLES.forEach(r=>{t+=`\n${R[r].label}\n`;R[r].jobs.forEach(j=>{const st=jobStats(j);t+=`- ${j.name}: ${st.d}/${st.n}${st.hpOpen?` | hold point belum: ${st.hpOpen}`:''}\n`})});
-  const open=S.ncr.filter(n=>n.status!=='Tutup');
-  t+=`\nNCR terbuka: ${open.length} dari ${S.ncr.length}\n`;open.forEach(n=>{t+=`- ${n.no} [${n.level}] ${n.area}: ${n.desc}\n`});
+  [S.role].forEach(r=>{t+=`\nCakupan: ${R[r].label} (${R[r].sub})\n`;R[r].jobs.forEach(j=>{const st=jobStats(j);t+=`- ${j.name}: ${st.d}/${st.n}${st.hpOpen?` | hold point belum: ${st.hpOpen}`:''}\n`})});
+  const sn=scopeNcr(),open=sn.filter(n=>n.status!=='Tutup');
+  t+=`\nNCR terbuka${S.role==='qc'?' (semua peran)':''}: ${open.length} dari ${sn.length}\n`;open.forEach(n=>{t+=`- ${n.no} [${n.level}] ${n.area}: ${n.desc}\n`});
   return t;
 }
 function renderRekap(){
+  $('#rekapSub').textContent=`Cakupan ${R[S.role].label} (${R[S.role].sub}). Ganti cakupan lewat pilihan peran di bagian atas.`;
   $('#mProj').value=S.meta.project;$('#mCon').value=S.meta.contractor;$('#mArea').value=S.meta.area;$('#mUser').value=S.meta.user;$('#sUrl').value=S.sync.url;$('#sTok').value=S.sync.token;renderSync();
-  $('#sumTbl').innerHTML='<table class="sum"><tr><th>Pekerjaan</th><th>Hold point</th><th>Progres</th></tr>'+allJobs().map(j=>{const st=jobStats(j);
+  $('#sumTbl').innerHTML='<table class="sum"><tr><th>Pekerjaan</th><th>Hold point</th><th>Progres</th></tr>'+scopeJobs().map(j=>{const st=jobStats(j);
     return `<tr><td>${esc(j.name)}<br><span class="k" style="font:11px var(--f-mono);color:var(--muted)">${R[j.role].label}</span></td><td>${st.hpOpen?`<span class="pill hp">${st.hpOpen} BELUM</span>`:'<span class="pill ok">AMAN</span>'}</td><td class="n">${st.d}/${st.n}</td></tr>`}).join('')+'</table>';
   $('#report').value=report();
 }
