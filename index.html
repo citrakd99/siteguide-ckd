@@ -132,6 +132,21 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
 
 
 
+
+/* produksi */
+.pcalc{border:1px solid var(--line);background:var(--surface);padding:12px;margin:0 0 14px}
+.pcalc label{display:block;line-height:1.3;font:500 12px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:10px 0 4px}
+.pcalc label:first-of-type{margin-top:0}
+.pcalc select,.pcalc input{width:100%;box-sizing:border-box;font:16px var(--f-body);padding:10px 12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0}
+.pcalc .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pres{margin-top:12px;padding:10px 12px;border-left:4px solid var(--accent);background:var(--bg);overflow-wrap:anywhere}
+.pres b{font-family:var(--f-display);font-size:20px}
+.prow{border:1px solid var(--line);background:var(--surface);padding:10px 12px;margin:0 0 8px;min-width:0}
+.prow header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.prow b{overflow-wrap:anywhere}
+.prow .cap{font:600 14px var(--f-mono);white-space:nowrap;color:var(--accent)}
+.prow .crew{color:var(--muted);font-size:14px;margin:4px 0 8px;overflow-wrap:anywhere}
+
 /* standar */
 .stdq{width:100%;box-sizing:border-box;font:16px var(--f-body);padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:0;margin:0 0 10px}
 .std-sum{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:start}
@@ -166,9 +181,10 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
 
 /* tab bar */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);
-  display:grid;grid-template-columns:repeat(6,1fr);
+  display:grid;grid-auto-flow:column;grid-auto-columns:1fr;
   padding:0 max(8px,env(safe-area-inset-left,0px)) env(safe-area-inset-bottom,0px) max(8px,env(safe-area-inset-right,0px))}
 .tabs a{display:block;text-align:center;padding:12px 2px 11px;color:var(--muted);text-decoration:none;font:600 10px var(--f-mono);letter-spacing:.02em;text-transform:uppercase;border-top:3px solid transparent;margin-top:-1px;white-space:nowrap}
+.tabs a[hidden]{display:none}
 .tabs a[aria-current="page"]{color:var(--accent);border-top-color:var(--accent)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(72px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 14px;font-size:13px;z-index:40;max-width:90vw}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
@@ -206,6 +222,30 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
     <div class="wmf" id="wmFilter" hidden></div>
     <div id="wmList"></div>
     <div class="note">Work method diringkas dari Method Statement proyek (status dokumen mengikuti kolom Status). JSA adalah <b>draf turunan</b> dari langkah kerja dan bagian keselamatan MS, belum menggantikan JSA resmi proyek. Wajib ditinjau dan disetujui HSE sebelum dipakai untuk briefing.</div>
+  </section>
+
+  <section id="produksi" hidden>
+    <h2>Produktivitas pekerja</h2>
+    <p class="sub">Kapasitas kerja harian per regu untuk pekerjaan CSA dan MEP. 1 hari kerja = 8 jam, 7 jam efektif, dengan material tersedia di lokasi.</p>
+    <div class="pcalc">
+      <label for="pcJob">Pekerjaan</label>
+      <select id="pcJob"></select>
+      <div class="two">
+        <div><label for="pcVol">Volume</label><input id="pcVol" type="text" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+        <div><label for="pcRegu">Jumlah regu</label><input id="pcRegu" type="text" inputmode="numeric" value="1" autocomplete="off"></div>
+      </div>
+      <div class="two">
+        <div><label for="pcHari">Target hari</label><input id="pcHari" type="text" inputmode="numeric" placeholder="0" autocomplete="off"></div>
+        <div><label for="pcF">Kondisi</label><select id="pcF"><option value="0">Normal</option><option value="0.2">Tinggi -20%</option><option value="0.3">Tinggi -30%</option></select></div>
+      </div>
+      <div class="pres" id="pcOut" aria-live="polite">Isi volume untuk menghitung durasi.</div>
+    </div>
+    <div class="wmf" id="pcF2" role="group" aria-label="Kelompok pekerjaan"></div>
+    <input type="search" class="stdq" id="pcQ" placeholder="Cari pekerjaan" aria-label="Cari pekerjaan" autocomplete="off">
+    <div id="pcList"></div>
+    <h3 class="sech">Catatan pengendalian lapangan</h3>
+    <div class="note"><b>Faktor kesulitan.</b> Pekerjaan di area tinggi (plafon tinggi, eksterior gedung bertingkat) menurunkan kapasitas hingga 20-30% karena waktu mobilisasi, demobilisasi keselamatan, dan material.<br><br><b>Rasio tenaga kerja.</b> Bila material ke titik kerja sulit atau jauh, ubah rasio menjadi 1 tukang : 2 kenek agar tukang tidak menganggur menunggu bahan.<br><br><b>Progress harian.</b> Lakukan opname prestasi fisik sebelum jam istirahat siang (12:00) untuk memproyeksikan pencapaian sore hari.</div>
+    <div class="note">Sumber: dokumen Standar Produktivitas Pekerjaan CSA dan MEP yang diunggah ke proyek. Dokumen menyebut acuan AHSP Permen PUPR No. 1 Tahun 2022, SNI harga satuan, dan praktik kontraktor (rule of thumb). Angka adalah <b>perkiraan perencanaan</b>, bukan angka kontrak. Sesuaikan dengan kondisi lapangan dan kemampuan pekerja.</div>
   </section>
 
   <section id="ncr" hidden>
@@ -415,6 +455,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
 <nav class="tabs" aria-label="Menu utama">
   <a href="#checklist" data-t="checklist">Checklist</a>
   <a href="#standar" data-t="standar">Standar</a>
+  <a href="#produksi" data-t="produksi" hidden>Produksi</a>
   <a href="#ncr" data-t="ncr">NCR</a>
   <a href="#alat" data-t="alat">Alat uji</a>
   <a href="#rekap" data-t="rekap">Rekap</a>
@@ -862,7 +903,7 @@ function refreshJob(id){
   const j=allJobs().find(x=>x.id===id),el=$(`details[data-job="${id}"]`);if(!j||!el)return;
   const st=jobStats(j);$('.cnt',el).textContent=st.d+'/'+st.n;$('.bdg',el).innerHTML=badge(st);$('.bar i',el).style.width=Math.round(st.d/st.n*100)+'%';
 }
-$('#roleSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;S.role=b.dataset.r;save();renderRoles();renderJobs();fillJobSelect();if(!$('#rekap').hidden)renderRekap();if(!$('#standar').hidden){stdG={csa:'csa',mep:'mep',qc:'semua',hse:'k3'}[S.role]||'semua';renderStd()}});
+$('#roleSeg').addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;S.role=b.dataset.r;save();renderRoles();renderJobs();fillJobSelect();if(!$('#rekap').hidden)renderRekap();applyProdVis();if(!$('#produksi').hidden){if(isSpv()){pcG=S.role;renderPrd()}else location.hash='#checklist'}if(!$('#standar').hidden){stdG={csa:'csa',mep:'mep',qc:'semua',hse:'k3'}[S.role]||'semua';renderStd()}});
 const jobsEl=$('#jobs');
 jobsEl.addEventListener('change',e=>{const t=e.target;if(t.type!=='checkbox')return;const id=t.dataset.j;(S.checks[id]=S.checks[id]||{})[t.dataset.k]=t.checked;save();refreshJob(id);
   const jj=allJobs().find(x=>x.id===id);ev('check',{job:id,jobName:jj?jj.name:id,step:t.nextElementSibling.firstChild.textContent,checked:t.checked})});
@@ -1064,14 +1105,61 @@ $('#stdF').addEventListener('click',e=>{const b=e.target.closest('button[data-sg
 $('#stdQ').addEventListener('input',e=>{stdQ=e.target.value;renderStd()});
 $('#stdList').addEventListener('click',e=>{const b=e.target.closest('button[data-sc]');if(!b)return;const x=STD.find(y=>y.no===b.dataset.sc);if(!x)return;copyText(`${x.no}\n${x.title}\n\nYang diatur: ${x.scope}\nDipakai untuk: ${x.use}\nPoin:\n${x.pts.map(t=>'- '+t).join('\n')}\n\nCek edisi dan nilai batas pada dokumen kontrak.`)});
 
+
+/* produktivitas pekerja */
+const PRD=[{"n":1,"t":"Pekerjaan Tanah & Sipil (Civil)","r":[{"j":"Galian Tanah Biasa (Manual)","c":"1 Pekerja","lo":1.0,"hi":1.5,"u":"m³","cap":"1 - 1,5"},{"j":"Galian Tanah Keras (Manual)","c":"1 Pekerja","lo":0.5,"hi":0.8,"u":"m³","cap":"0,5 - 0,8"},{"j":"Urugan Tanah (Kembali & Padatkan)","c":"1 Pekerja","lo":2.5,"hi":3.0,"u":"m³","cap":"2,5 - 3"},{"j":"Urugan Pasir / Sirtu (Hampar & Padat)","c":"1 Pekerja","lo":3.0,"hi":4.0,"u":"m³","cap":"3-4"},{"j":"Pemadatan Tanah (dengan Stamper)","c":"1 Operator + 1 Kenek","lo":80.0,"hi":100.0,"u":"m²","cap":"80 - 100"},{"j":"Pasang Pondasi Batu Kali / Belah","c":"1 Tukang + 2 Kenek","lo":2.5,"hi":3.0,"u":"m³","cap":"2,5 - 3"},{"j":"Pasang Turap / Retaining Wall","c":"1 Tukang + 2 Kenek","lo":2.0,"hi":2.5,"u":"m³","cap":"2 - 2,5"},{"j":"Pasang Paving Block & Pasir Alas","c":"1 Tukang + 2 Kenek","lo":20.0,"hi":30.0,"u":"m²","cap":"20 - 30"},{"j":"Pasang Kanstin Beton (Curbing)","c":"1 Tukang + 2 Kenek","lo":15.0,"hi":20.0,"u":"m'","cap":"15 - 20"},{"j":"Pembersihan Lahan (Clearing)","c":"1 Pekerja","lo":20.0,"hi":30.0,"u":"m²","cap":"20 - 30"}]},{"n":2,"t":"Pekerjaan Struktur (Structural)","r":[{"j":"Pasang Perancah / Scaffolding","c":"2 Scaffolder + 2 Kenek","lo":40.0,"hi":50.0,"u":"set","cap":"40 - 50"},{"j":"Pabrikasi Besi Tulangan (Potong/Bengkok)","c":"1 Tukang + 1 Kenek","lo":150.0,"hi":200.0,"u":"kg","cap":"150 - 200"},{"j":"Pemasangan Besi / Rakit di Lokasi","c":"1 Tukang + 1 Kenek","lo":100.0,"hi":150.0,"u":"kg","cap":"100 - 150"},{"j":"Gelar Wiremesh (Lantai)","c":"1 Tukang + 2 Kenek","lo":150.0,"hi":200.0,"u":"m²","cap":"150 - 200"},{"j":"Bekisting Multiplek (Pasang)","c":"1 Tukang + 1 Kenek","lo":4.0,"hi":6.0,"u":"m²","cap":"4-6"},{"j":"Bekisting Multiplek (Bongkar)","c":"1 Tukang + 1 Kenek","lo":15.0,"hi":20.0,"u":"m²","cap":"15 - 20"},{"j":"Gelar Bondek (Floor Deck)","c":"1 Tukang + 2 Kenek","lo":30.0,"hi":40.0,"u":"m²","cap":"30 - 40"},{"j":"Cor Beton Manual (Molen)","c":"1 Tukang + 4 Kenek","lo":3.0,"hi":5.0,"u":"m³","cap":"3-5"},{"j":"Cor Beton (Ready Mix + Pompa)","c":"1 Mandor + 2 Tk + 5 Kn","lo":30.0,"hi":50.0,"u":"m³","cap":"30 - 50"},{"j":"Pemasangan Baja Profil (WF/H-Beam)","c":"1 Fitter + 1 Welder + 3 Rigger","lo":500.0,"hi":800.0,"u":"kg","cap":"500 - 800"},{"j":"Grouting (Kolom Baja / Plat)","c":"1 Tukang + 1 Kenek","lo":1.0,"hi":1.5,"u":"m³","cap":"1 - 1,5"}]},{"n":3,"t":"Pekerjaan Arsitektur (Architectural)","r":[{"j":"Pasang Bata Merah (1/2 bata)","c":"1 Tukang + 1 Kenek","lo":8.0,"hi":12.0,"u":"m²","cap":"8 - 12"},{"j":"Pasang Bata Ringan (Hebel)","c":"1 Tukang + 1 Kenek","lo":15.0,"hi":20.0,"u":"m²","cap":"15 - 20"},{"j":"Plesteran Dinding (Tebal 15-20mm)","c":"1 Tukang + 1 Kenek","lo":10.0,"hi":15.0,"u":"m²","cap":"10 - 15"},{"j":"Acian Dinding","c":"1 Tukang + 1 Kenek","lo":15.0,"hi":25.0,"u":"m²","cap":"15 - 25"},{"j":"Waterproofing Coating (2 Lapis)","c":"1 Tukang + 1 Kenek","lo":25.0,"hi":30.0,"u":"m²","cap":"25 - 30"},{"j":"Waterproofing Membran Bakar","c":"1 Tukang + 2 Kenek","lo":30.0,"hi":40.0,"u":"m²","cap":"30 - 40"},{"j":"Pasang Keramik/Granit Lantai (60x60)","c":"1 Tukang + 1 Kenek","lo":8.0,"hi":12.0,"u":"m²","cap":"8 - 12"},{"j":"Pasang Keramik Dinding","c":"1 Tukang + 1 Kenek","lo":6.0,"hi":10.0,"u":"m²","cap":"6 - 10"},{"j":"Pasang Plint Keramik / Kayu","c":"1 Tukang + 1 Kenek","lo":25.0,"hi":30.0,"u":"m'","cap":"25 - 30"},{"j":"Pasang Penutup Plafon (Gypsum/GRC)","c":"1 Tukang + 1 Kenek","lo":15.0,"hi":20.0,"u":"m²","cap":"15 - 20"},{"j":"Pengecatan Dinding (Cat Dasar+Akhir)","c":"1 Tukang","lo":30.0,"hi":40.0,"u":"m²","cap":"30 - 40"},{"j":"Pasang Kusen Aluminium","c":"1 Tukang + 1 Kenek","lo":10.0,"hi":15.0,"u":"m'","cap":"10 - 15"},{"j":"Pemasangan ACP (Aluminium Composite)","c":"2 Tukang + 2 Kenek","lo":8.0,"hi":12.0,"u":"m²","cap":"8 - 12"},{"j":"Pasang Rangka Atap Baja Ringan","c":"1 Tukang + 2 Kenek","lo":20.0,"hi":30.0,"u":"m²","cap":"20 - 30"},{"j":"Pasang Genteng / Spandek","c":"1 Tukang + 2 Kenek","lo":30.0,"hi":40.0,"u":"m²","cap":"30 - 40"}]},{"n":4,"t":"Pekerjaan Elektrikal (Electrical)","r":[{"j":"Tanam Pipa Conduit (Inbouw / Tembok)","c":"1 Tukang + 1 Kenek","lo":20.0,"hi":30.0,"u":"m'","cap":"20 - 30"},{"j":"Pasang Pipa Conduit (Outbouw / Exposed)","c":"1 Tukang + 1 Kenek","lo":25.0,"hi":35.0,"u":"m'","cap":"25 - 35"},{"j":"Tarik Kabel Instalasi (NYM 3x2.5)","c":"1 Tukang + 1 Kenek","lo":100.0,"hi":150.0,"u":"m'","cap":"100 - 150"},{"j":"Tarik Kabel Feeder (NYFGBY / Besar)","c":"1 Tukang + 3 Kenek","lo":50.0,"hi":80.0,"u":"m'","cap":"50 - 80"},{"j":"Pemasangan Tray / Ladder Kabel","c":"2 Tukang + 2 Kenek","lo":15.0,"hi":20.0,"u":"m'","cap":"15 - 20"},{"j":"Pasang Saklar / Stop Kontak (Terminasi)","c":"1 Tukang","lo":15.0,"hi":25.0,"u":"titik","cap":"15 - 25"},{"j":"Pasang Armatur Lampu Downlight/LED","c":"1 Tukang + 1 Kenek","lo":10.0,"hi":15.0,"u":"titik","cap":"10 - 15"},{"j":"Pemasangan Panel Box (MCB/Kecil)","c":"1 Tukang + 1 Kenek","lo":2.0,"hi":3.0,"u":"unit","cap":"2-3"},{"j":"Instalasi Penangkal Petir (Grounding)","c":"1 Tukang + 2 Kenek","lo":1.0,"hi":2.0,"u":"titik","cap":"1-2"}]},{"n":5,"t":"Pekerjaan Plumbing & Sanitasi","r":[{"j":"Instalasi Pipa Air Bersih (PVC 1/2\" - 1\")","c":"1 Tukang + 1 Kenek","lo":20.0,"hi":25.0,"u":"m'","cap":"20 - 25"},{"j":"Instalasi Pipa Air Bersih (PPR/Las)","c":"1 Tukang + 1 Kenek","lo":15.0,"hi":20.0,"u":"m'","cap":"15 - 20"},{"j":"Instalasi Pipa Air Kotor (PVC 3\" - 4\")","c":"1 Tukang + 1 Kenek","lo":15.0,"hi":20.0,"u":"m'","cap":"15 - 20"},{"j":"Pemasangan Closet Duduk / Monoblok","c":"1 Tukang + 1 Kenek","lo":1.0,"hi":2.0,"u":"unit","cap":"1-2"},{"j":"Pemasangan Closet Jongkok","c":"1 Tukang + 1 Kenek","lo":2.0,"hi":3.0,"u":"unit","cap":"2-3"},{"j":"Pemasangan Wastafel","c":"1 Tukang + 1 Kenek","lo":2.0,"hi":3.0,"u":"unit","cap":"2-3"},{"j":"Pasang Kran Air / Floor Drain / Shower","c":"1 Tukang","lo":8.0,"hi":12.0,"u":"unit","cap":"8 - 12"},{"j":"Pemasangan Pompa Air (Jetpump/Transfer)","c":"1 Tukang + 2 Kenek","lo":1.0,"hi":1.0,"u":"unit","cap":"1"},{"j":"Pemasangan Tangki Air (Toren) & Pipa","c":"1 Tukang + 2 Kenek","lo":1.0,"hi":2.0,"u":"unit","cap":"1-2"}]},{"n":6,"t":"Pekerjaan Mekanikal (HVAC & Fire Fighting)","r":[{"j":"Instalasi Unit AC Split Wall (Ind/Out)","c":"1 Tukang + 1 Kenek","lo":2.0,"hi":3.0,"u":"unit","cap":"2-3"},{"j":"Instalasi AC Cassette / VRV","c":"2 Tukang + 2 Kenek","lo":1.0,"hi":2.0,"u":"unit","cap":"1-2"},{"j":"Tarik Pipa Tembaga AC (Refrigerant)","c":"1 Tukang + 1 Kenek","lo":15.0,"hi":20.0,"u":"m'","cap":"15 - 20"},{"j":"Pemasangan Ducting BJLS (Utama)","c":"2 Tukang + 2 Kenek","lo":10.0,"hi":15.0,"u":"m²","cap":"10 - 15"},{"j":"Pemasangan Exhaust / Ventilation Fan","c":"1 Tukang + 1 Kenek","lo":3.0,"hi":5.0,"u":"unit","cap":"3-5"},{"j":"Instalasi Pipa Pemadam Kebakaran (Besi)","c":"1 Fitter + 1 Welder + 2 Kn","lo":10.0,"hi":15.0,"u":"m'","cap":"10 - 15"},{"j":"Pemasangan Box Hydrant (Indoor)","c":"1 Tukang + 2 Kenek","lo":1.0,"hi":2.0,"u":"unit","cap":"1-2"},{"j":"Pemasangan Titik Sprinkler","c":"1 Tukang + 1 Kenek","lo":8.0,"hi":12.0,"u":"titik","cap":"8 - 12"}]}];
+const PRG={semua:'Semua',csa:'CSA',mep:'MEP'};
+const prRole=n=>n<=3?'csa':'mep';
+let pcG={csa:'csa',mep:'mep'}[S.role]||'semua',pcQ='';
+const prRows=()=>PRD.flatMap(g=>g.r.map(r=>({...r,g:prRole(g.n),sec:g.t})));
+const fnum=n=>n.toLocaleString('id-ID',{maximumFractionDigits:2});
+const prRange=r=>r.lo===r.hi?fnum(r.lo):fnum(r.lo)+' - '+fnum(r.hi);
+const isSpv=()=>S.role==='csa'||S.role==='mep';
+function applyProdVis(){
+  const a=document.querySelector('.tabs a[data-t="produksi"]');if(a)a.hidden=!isSpv();
+}
+function pcNum(v){const n=parseFloat(String(v).replace(',','.'));return isFinite(n)&&n>0?n:0}
+function pcCalc(){
+  const i=+$('#pcJob').value,r=prRows()[i],out=$('#pcOut');
+  if(!r){out.textContent='Pilih pekerjaan.';return}
+  const v=pcNum($('#pcVol').value),n=Math.max(1,Math.floor(pcNum($('#pcRegu').value))||1),h=Math.floor(pcNum($('#pcHari').value)),f=+$('#pcF').value;
+  const lo=r.lo*(1-f),hi=r.hi*(1-f);
+  let t=`Kapasitas per regu: <b>${fnum(lo)}${lo===hi?'':' - '+fnum(hi)}</b> ${esc(r.u)}/hari<br>Regu: ${esc(r.c)}`;
+  if(v){
+    const d1=Math.ceil(v/(hi*n)),d2=Math.ceil(v/(lo*n));
+    t+=`<br>Volume ${fnum(v)} ${esc(r.u)} dengan ${n} regu: <b>${d1===d2?d1:d1+' - '+d2} hari kerja</b>`;
+    if(h){const n1=Math.ceil(v/(hi*h)),n2=Math.ceil(v/(lo*h));t+=`<br>Target ${h} hari: butuh <b>${n1===n2?n1:n1+' - '+n2} regu</b>`}
+  }else t+='<br>Isi volume untuk menghitung durasi.';
+  out.innerHTML=t;
+}
+function renderPrd(){
+  const rows=prRows();
+  if(!$('#pcJob').options.length){$('#pcJob').innerHTML=rows.map((r,i)=>`<option value="${i}">${esc(r.j)}</option>`).join('')}
+  $('#pcF2').innerHTML=Object.keys(PRG).map(g=>`<button type="button" data-pg="${g}" aria-pressed="${pcG===g}">${PRG[g]}</button>`).join('');
+  const q=pcQ.trim().toLowerCase();let h='',sec='';
+  rows.forEach((r,i)=>{
+    if((pcG!=='semua'&&r.g!==pcG)||(q&&![r.j,r.c,r.sec].join(' ').toLowerCase().includes(q)))return;
+    if(r.sec!==sec){sec=r.sec;h+=`<h3 class="sech">${esc(sec)}</h3>`}
+    h+=`<div class="prow"><header><b>${esc(r.j)}</b><span class="cap">${prRange(r)} ${esc(r.u)}</span></header><div class="crew">${esc(r.c)} (per hari)</div><button type="button" class="btn ghost small" data-pi="${i}">Hitung durasi</button></div>`;
+  });
+  $('#pcList').innerHTML=h||'<div class="empty">Tidak ada pekerjaan yang cocok.</div>';
+  pcCalc();
+}
+['pcJob','pcVol','pcRegu','pcHari','pcF'].forEach(id=>$('#'+id).addEventListener('input',pcCalc));
+$('#pcF2').addEventListener('click',e=>{const b=e.target.closest('button[data-pg]');if(!b)return;pcG=b.dataset.pg;renderPrd()});
+$('#pcQ').addEventListener('input',e=>{pcQ=e.target.value;renderPrd()});
+$('#pcList').addEventListener('click',e=>{const b=e.target.closest('button[data-pi]');if(!b)return;$('#pcJob').value=b.dataset.pi;pcCalc();$('.pcalc').scrollIntoView({behavior:'smooth',block:'start'});$('#pcVol').focus({preventScroll:true})});
+
 /* routing hash */
-const TABS=['checklist','standar','ncr','alat','rekap','panduan'];
+const TABS=['checklist','standar','produksi','ncr','alat','rekap','panduan'];
 function route(){
-  const h=location.hash.slice(1),t=TABS.includes(h)?h:'checklist';
+  applyProdVis();
+  const h=location.hash.slice(1),t=TABS.includes(h)&&(h!=='produksi'||isSpv())?h:'checklist';
   TABS.forEach(x=>{$('#'+x).hidden=x!==t});
   document.querySelectorAll('.tabs a').forEach(a=>{if(a.dataset.t===t)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   if(t==='rekap')renderRekap();
   if(t==='standar')renderStd();
+  if(t==='produksi'){pcG={csa:'csa',mep:'mep'}[S.role]||'semua';renderPrd()}
   if(t==='panduan'&&!S.seen){S.seen=true;save();$('#firstRun').hidden=true}
   window.scrollTo(0,0);
 }
