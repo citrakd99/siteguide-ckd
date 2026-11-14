@@ -2,7 +2,7 @@
 
 Panduan standar lapangan untuk SPV CSA, SPV MEP, dan QC (PWA, bisa dipasang di layar utama HP dan jalan offline).
 
-Proyek: Nama Proyek. Kontraktor: PT Citra Karsa Dinamika.
+Kontraktor: PT Citra Karsa Dinamika.
 
 ## Isi
 - `index.html`: aplikasi (checklist per pekerjaan, NCR, alat uji, rekap, panduan)
