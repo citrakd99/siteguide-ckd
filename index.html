@@ -275,9 +275,40 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
       <tr><td>BjTS 420B</td><td>min 420, maks 545</td><td>525</td><td>1,25</td></tr>
       <tr><td>BjTS 520</td><td>min 520, maks 645</td><td>650</td><td>1,25</td></tr>
       <tr><td>BjTS 550</td><td>min 550, maks 675</td><td>687,5</td><td>1,25</td></tr></tbody></table>
-    <div class="note">Nilai dicatat dari brosur produsen yang mengutip SNI 2052:2017, belum dicocokkan dengan naskah SNI. Mutu BjTP dan BjTS lain, tabel diameter, dan berat nominal: DATA TIDAK TERSEDIA dari sumber yang terbaca. Cocokkan dengan naskah SNI dan sertifikat pabrik.</div>
+    <div class="note">Nilai dicatat dari brosur produsen yang mengutip SNI 2052:2017, belum dicocokkan dengan naskah SNI. Mutu BjTP dan BjTS lain, tabel diameter, dan berat nominal: DATA TIDAK TERSEDIA (SNI 2052:2017 belum diunggah). Cocokkan dengan naskah SNI dan sertifikat pabrik.</div>
+    <h3 class="sech">Detail penulangan (SNI 2847:2019)</h3>
+    <div class="note">Nilai dicatat dari naskah SNI 2847:2019 yang diunggah ke proyek: pasal 20.6.1.3.1, 25.2, 25.3, 25.4.1.4, 25.4.2, 25.5.2 dan 25.5.5. Gambar kerja dan spesifikasi proyek tetap yang utama bila lebih ketat.</div>
+    <div class="pcalc">
+      <label for="rbHd">Kait dan bengkokan: diameter tulangan</label>
+      <select id="rbHd" aria-label="Diameter tulangan untuk kait"><option value="10">D10</option><option value="12">D12</option><option value="13">D13</option><option value="16" selected>D16</option><option value="19">D19</option><option value="22">D22</option><option value="25">D25</option><option value="29">D29</option><option value="32">D32</option><option value="36">D36</option></select>
+      <div class="pres" id="rbHout" aria-live="polite"></div>
+    </div>
+    <div class="pcalc">
+      <label for="rbLd">Panjang lewatan: diameter tulangan</label>
+      <select id="rbLd" aria-label="Diameter tulangan untuk lewatan"><option value="10">D10</option><option value="12">D12</option><option value="13">D13</option><option value="16" selected>D16</option><option value="19">D19</option><option value="22">D22</option><option value="25">D25</option><option value="29">D29</option><option value="32">D32</option><option value="36">D36</option></select>
+      <div class="two" style="margin-top:10px">
+        <div><label for="rbLfy">fy (MPa)</label><input id="rbLfy" type="text" inputmode="decimal" value="420" autocomplete="off"></div>
+        <div><label for="rbLfc">f'c (MPa)</label><input id="rbLfc" type="text" inputmode="decimal" value="25" autocomplete="off"></div>
+      </div>
+      <div class="two" style="margin-top:10px">
+        <div><label for="rbLs">Spasi dan selimut</label><select id="rbLs"><option value="g">Baik</option><option value="o">Lainnya</option></select></div>
+        <div><label for="rbLt">Posisi cor</label><select id="rbLt"><option value="1">Biasa</option><option value="1.3">Atas</option></select></div>
+      </div>
+      <div style="margin-top:10px"><label for="rbLk">Kelas lewatan tarik</label><select id="rbLk"><option value="B">Kelas B</option><option value="A">Kelas A</option></select></div>
+      <div class="pres" id="rbLout" aria-live="polite"></div>
+    </div>
+    <div class="note"><b>Spasi dan selimut Baik</b> (tabel 25.4.2.2): spasi bersih tulangan yang disalurkan atau disambung minimal db, selimut minimal db, dan sengkang atau ikat sepanjang ℓd tidak kurang dari standar minimum; atau spasi bersih minimal 2db dengan selimut minimal db. Selain itu pilih Lainnya.<br><br><b>Kelas A</b> hanya bila luas tulangan terpasang minimal 2 kali yang diperlukan analisis di lokasi sambungan dan paling banyak 50% tulangan disambung dalam panjang lewatan. Selain itu Kelas B (tabel 25.5.2.1).<br><br>Hitungan memakai beton normal (λ = 1,0), tulangan tanpa lapis epoksi (Ψe = 1,0), dan √f'c dibatasi 8,3 MPa (pasal 25.4.1.4). Lewatan tarik dengan diameter berbeda: ambil yang lebih besar antara ℓd batang besar dan ℓst batang kecil (pasal 25.5.2.2).</div>
+    <h3 class="sech">Selimut beton dan jarak bersih (SNI 2847:2019)</h3>
+    <table class="rbt"><thead><tr><th>Kondisi</th><th>Tulangan</th><th>Selimut</th></tr></thead><tbody>
+      <tr><td>Dicor dan kontak tanah permanen</td><td>Semua</td><td>75 mm</td></tr>
+      <tr><td>Terpapar cuaca atau kontak tanah</td><td>D19 sampai D57</td><td>50 mm</td></tr>
+      <tr><td>Terpapar cuaca atau kontak tanah</td><td>D16, kawat ∅13 atau D13, dan lebih kecil</td><td>40 mm</td></tr>
+      <tr><td>Tidak terpapar, pelat, pelat berusuk, dinding</td><td>D43 dan D57</td><td>40 mm</td></tr>
+      <tr><td>Tidak terpapar, pelat, pelat berusuk, dinding</td><td>D36 dan lebih kecil</td><td>20 mm</td></tr>
+      <tr><td>Tidak terpapar, balok, kolom, pedestal, batang tarik</td><td>Tulangan utama, sengkang, sengkang ikat, spiral, sengkang pengekang</td><td>40 mm</td></tr></tbody></table>
+    <div class="note">Tabel 20.6.1.3.1, beton nonprategang cor di tempat. Jarak bersih tulangan sejajar satu lapis (25.2.1): tidak kurang dari yang terbesar antara 25 mm, db, dan (4/3) kali ukuran agregat. Dua lapis atau lebih (25.2.2): lapis atas tepat di atas lapis bawah, spasi bersih minimal 25 mm. Kolom, pedestal, strut dan elemen batas dinding (25.2.3) punya batas sendiri, lihat naskah.</div>
     <h3 class="sech">Ketentuan kerja pembesian</h3>
-    <div class="note"><b>Nilai SNI 2847:2019</b> (selimut beton, diameter bengkokan, panjang kait, panjang lewatan, jarak bersih): DATA TIDAK TERSEDIA dari sumber yang terbaca. Ambil dari gambar kerja dan naskah SNI 2847:2019. Tanda <b>(lama)</b> berarti edisi lama, hanya sebagai pembanding. Bila berbeda dengan gambar atau spesifikasi proyek, yang berlaku adalah gambar dan spesifikasi.</div>
+    <div class="note">Butir di bawah memakai sumber sekunder. Tanda <b>(lama)</b> berarti edisi lama, hanya pembanding. Untuk selimut, kait, bengkokan, dan lewatan, nilai SNI 2847:2019 di atas yang dipakai. Bila berbeda dengan gambar atau spesifikasi proyek, yang berlaku adalah gambar dan spesifikasi.</div>
     <div id="rbRules"></div>
     </div>
     <h3 class="sech">Catatan pengendalian lapangan</h3>
@@ -331,7 +362,7 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
 
     <div class="card">
       <h3>Selimut beton minimum</h3>
-      <p class="sub">Acuan SNI 2847:2019 tabel 20.5.1.3.1 untuk beton normal. Gambar kerja menentukan bila lebih tebal.</p>
+      <p class="sub">Acuan SNI 2847:2019 tabel 20.6.1.3.1 untuk beton cor di tempat nonprategang. Gambar kerja menentukan bila lebih tebal.</p>
       <div class="tscroll"><table>
         <tr><th>Kondisi</th><th>Tulangan</th><th>Tebal</th></tr>
         <tr><td>Dicor langsung di tanah dan tetap kontak tanah</td><td>Semua</td><td class="n">75 mm</td></tr>
@@ -1226,12 +1257,38 @@ function rbCalc(){
 function renderRb(){
   if(!$('#rbRows').children.length)$('#rbRows').innerHTML=rbRow(13,12,0);
   $('#rbRules').innerHTML=RB_RULES.map(r=>`<div class="prow"><div>${esc(r[0])}<span class="rbs">${esc(r[1])}</span></div></div>`).join('');
-  rbCalc();
+  rbCalc();rbHook();rbLap();
 }
 $('#rbRows').addEventListener('input',rbCalc);
 $('#rbRows').addEventListener('click',e=>{const b=e.target.closest('button[data-rbx]');if(!b)return;if($('#rbRows').children.length>1)b.closest('.rbr').remove();rbCalc()});
 $('#rbAdd').addEventListener('click',()=>{$('#rbRows').insertAdjacentHTML('beforeend',rbRow(13,'',''));rbCalc()});
 ['rbR1','rbR2'].forEach(id=>$('#'+id).addEventListener('input',rbCalc));
+
+/* SNI 2847:2019 kait, bengkokan, lewatan */
+function rbHook(){
+  const d=+$('#rbHd').value,f=x=>fnum(Math.round(x));
+  const k1=d<=25?6:8;
+  let t=`<b>Tulangan utama, kait penyaluran (tabel 25.3.1)</b><br>Diameter dalam bengkokan min: <b>${f(k1*d)} mm</b> (${k1}db)<br>Kait 90°: perpanjangan lurus <b>${f(12*d)} mm</b> (12db)<br>Kait 180°: perpanjangan lurus <b>${f(Math.max(4*d,65))} mm</b> (terbesar 4db dan 65 mm)`;
+  if(d<=25){
+    const k2=d<=16?4:6,e90=d<=16?Math.max(6*d,75):12*d,e135=Math.max(6*d,75),e180=Math.max(4*d,65);
+    t+=`<br><br><b>Sengkang dan ikat silang (tabel 25.3.2)</b><br>Diameter dalam bengkokan min: <b>${f(k2*d)} mm</b> (${k2}db)<br>Kait 90°: <b>${f(e90)} mm</b><br>Kait 135°: <b>${f(e135)} mm</b><br>Kait 180°: <b>${f(e180)} mm</b>`;
+  }else t+='<br><br>Sengkang dan ikat silang: tabel 25.3.2 hanya sampai D25.';
+  $('#rbHout').innerHTML=t;
+}
+function rbLap(){
+  const d=+$('#rbLd').value,fy=pcNum($('#rbLfy').value),fc=pcNum($('#rbLfc').value),out=$('#rbLout');
+  if(!(fy>0)||!(fc>0)){out.textContent='Isi fy dan f\'c.';return}
+  const good=$('#rbLs').value==='g',pt=+$('#rbLt').value,cls=$('#rbLk').value;
+  const rc=Math.min(Math.sqrt(fc),8.3),k=d<=19?(good?2.1:1.4):(good?1.7:1.1);
+  const ld=Math.max(fy*pt/(k*rc)*d,300),lst=Math.max((cls==='A'?1:1.3)*ld,300);
+  let sc=fy<=420?Math.max(0.071*fy*d,300):Math.max((0.13*fy-24)*d,300);
+  if(fc<21)sc*=4/3;
+  const f=x=>fnum(Math.ceil(x/5)*5);
+  out.innerHTML=`Penyaluran tarik ℓd: <b>${f(ld)} mm</b> (${fnum(Math.round(ld/d*10)/10)}db)<br>Lewatan tarik ℓst, Kelas ${cls}: <b>${f(lst)} mm</b> (${fnum(Math.round(lst/d*10)/10)}db)<br>Lewatan tekan ℓsc: <b>${f(sc)} mm</b>`+(fc<21?'<br>f\'c di bawah 21 MPa: lewatan tekan sudah ditambah sepertiga.':'')+(fc>69?'<br>√f\'c dibatasi 8,3 MPa.':'');
+}
+$('#rbHd').addEventListener('change',rbHook);
+['rbLd','rbLs','rbLt','rbLk'].forEach(id=>$('#'+id).addEventListener('change',rbLap));
+['rbLfy','rbLfc'].forEach(id=>$('#'+id).addEventListener('input',rbLap));
 
 /* routing hash */
 const TABS=['checklist','standar','produksi','ncr','alat','rekap','panduan'];
