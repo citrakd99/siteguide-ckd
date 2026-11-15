@@ -133,6 +133,19 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
 
 
 
+
+/* pembesian */
+.rbh,.rbr{display:grid;grid-template-columns:1.1fr 1fr 1fr 40px;gap:6px;align-items:center}
+.rbh span{font:500 11px var(--f-mono);color:var(--muted);text-transform:uppercase}
+.rbr{margin:0 0 6px}
+.rbr select,.rbr input{width:100%;box-sizing:border-box;min-width:0;padding:9px 6px;font-size:16px}
+.rbr button{height:40px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;border-radius:0;font-size:18px}
+.rbt{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse;font-size:14px}
+.rbt th,.rbt td{overflow-wrap:anywhere;word-break:break-word}
+.rbt th,.rbt td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.rbt th{background:var(--chip);font:500 10px var(--f-mono);text-transform:uppercase}
+.rbs{display:inline-block;font:500 11px var(--f-mono);border:1px solid var(--line);padding:1px 6px;margin-left:6px;color:var(--muted)}
+
 /* produksi */
 .pcalc{border:1px solid var(--line);background:var(--surface);padding:12px;margin:0 0 14px}
 .pcalc label{display:block;line-height:1.3;font:500 12px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:10px 0 4px}
@@ -243,6 +256,30 @@ table.sum td:last-child,table.sum th:last-child{text-align:right}
     <div class="wmf" id="pcF2" role="group" aria-label="Kelompok pekerjaan"></div>
     <input type="search" class="stdq" id="pcQ" placeholder="Cari pekerjaan" aria-label="Cari pekerjaan" autocomplete="off">
     <div id="pcList"></div>
+    <div id="rbBlock">
+    <h3 class="sech">Pembesian</h3>
+    <div class="pcalc">
+      <div class="rbh"><span>Diameter (mm)</span><span>Panjang (m)</span><span>Jumlah</span><span></span></div>
+      <div id="rbRows"></div>
+      <div class="row"><button type="button" class="btn ghost small" id="rbAdd">Tambah baris</button></div>
+      <div class="two" style="margin-top:10px">
+        <div><label for="rbR1">Regu pabrikasi</label><input id="rbR1" type="text" inputmode="numeric" value="1" autocomplete="off"></div>
+        <div><label for="rbR2">Regu rakit</label><input id="rbR2" type="text" inputmode="numeric" value="1" autocomplete="off"></div>
+      </div>
+      <div class="pres" id="rbOut" aria-live="polite">Isi panjang dan jumlah batang.</div>
+    </div>
+    <div class="note">Berat dihitung teoritis: 0,00617 x d x d (kg/m, d dalam mm), dari massa jenis baja 7850 kg/m³. Berat nominal pada SNI 2052:2017 bisa sedikit berbeda. Pabrikasi (potong dan bengkok) dan pemasangan memakai kapasitas dari tabel di atas.</div>
+    <h3 class="sech">Mutu baja tulangan (SNI 2052:2017)</h3>
+    <table class="rbt"><thead><tr><th>Mutu</th><th>Leleh MPa</th><th>Tarik min</th><th>Tarik / leleh</th></tr></thead><tbody>
+      <tr><td>BjTS 420A</td><td>min 420, maks 545</td><td>525</td><td>1,25</td></tr>
+      <tr><td>BjTS 420B</td><td>min 420, maks 545</td><td>525</td><td>1,25</td></tr>
+      <tr><td>BjTS 520</td><td>min 520, maks 645</td><td>650</td><td>1,25</td></tr>
+      <tr><td>BjTS 550</td><td>min 550, maks 675</td><td>687,5</td><td>1,25</td></tr></tbody></table>
+    <div class="note">Nilai dicatat dari brosur produsen yang mengutip SNI 2052:2017, belum dicocokkan dengan naskah SNI. Mutu BjTP dan BjTS lain, tabel diameter, dan berat nominal: DATA TIDAK TERSEDIA dari sumber yang terbaca. Cocokkan dengan naskah SNI dan sertifikat pabrik.</div>
+    <h3 class="sech">Ketentuan kerja pembesian</h3>
+    <div class="note"><b>Nilai SNI 2847:2019</b> (selimut beton, diameter bengkokan, panjang kait, panjang lewatan, jarak bersih): DATA TIDAK TERSEDIA dari sumber yang terbaca. Ambil dari gambar kerja dan naskah SNI 2847:2019. Tanda <b>(lama)</b> berarti edisi lama, hanya sebagai pembanding. Bila berbeda dengan gambar atau spesifikasi proyek, yang berlaku adalah gambar dan spesifikasi.</div>
+    <div id="rbRules"></div>
+    </div>
     <h3 class="sech">Catatan pengendalian lapangan</h3>
     <div class="note"><b>Faktor kesulitan.</b> Pekerjaan di area tinggi (plafon tinggi, eksterior gedung bertingkat) menurunkan kapasitas hingga 20-30% karena waktu mobilisasi, demobilisasi keselamatan, dan material.<br><br><b>Rasio tenaga kerja.</b> Bila material ke titik kerja sulit atau jauh, ubah rasio menjadi 1 tukang : 2 kenek agar tukang tidak menganggur menunggu bahan.<br><br><b>Progress harian.</b> Lakukan opname prestasi fisik sebelum jam istirahat siang (12:00) untuk memproyeksikan pencapaian sore hari.</div>
     <div class="note">Sumber: dokumen Standar Produktivitas Pekerjaan CSA dan MEP yang diunggah ke proyek. Dokumen menyebut acuan AHSP Permen PUPR No. 1 Tahun 2022, SNI harga satuan, dan praktik kontraktor (rule of thumb). Angka adalah <b>perkiraan perencanaan</b>, bukan angka kontrak. Sesuaikan dengan kondisi lapangan dan kemampuan pekerja.</div>
@@ -830,7 +867,7 @@ qc:{label:'QC',sub:'Quality Control',jobs:[
 const ROLES=['csa','mep','qc','hse'];
 const PH={P:'Sebelum kerja',S:'Saat kerja',A:'Setelah kerja'};
 const KEY='siteguide-ckd-v1';
-const DEF={project:'Nama Proyek',contractor:'PT Citra Karsa Dinamika',area:'',user:''};
+const DEF={project:'Batik Project - Safran',contractor:'PT Citra Karsa Dinamika',area:'',user:''};
 const SYNC_DEFAULT={url:'',token:''};
 let S={v:2,meta:{...DEF},role:'csa',checks:{},notes:{},ncr:[],sync:{...SYNC_DEFAULT,last:'',err:''}};
 try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);S=Object.assign(S,o);S.v=o.v||1;const m=o.meta||{};S.meta={project:m.project||DEF.project,contractor:m.contractor||DEF.contractor,area:m.area||'',user:m.user||''};const y=o.sync||{};S.sync={url:y.url||SYNC_DEFAULT.url,token:y.token||SYNC_DEFAULT.token,last:y.last||'',err:''}}}catch(e){}
@@ -1144,11 +1181,57 @@ function renderPrd(){
   });
   $('#pcList').innerHTML=h||'<div class="empty">Tidak ada pekerjaan yang cocok.</div>';
   pcCalc();
+  $('#rbBlock').hidden=pcG==='mep';
+  renderRb();
 }
 ['pcJob','pcVol','pcRegu','pcHari','pcF'].forEach(id=>$('#'+id).addEventListener('input',pcCalc));
 $('#pcF2').addEventListener('click',e=>{const b=e.target.closest('button[data-pg]');if(!b)return;pcG=b.dataset.pg;renderPrd()});
 $('#pcQ').addEventListener('input',e=>{pcQ=e.target.value;renderPrd()});
 $('#pcList').addEventListener('click',e=>{const b=e.target.closest('button[data-pi]');if(!b)return;$('#pcJob').value=b.dataset.pi;pcCalc();$('.pcalc').scrollIntoView({behavior:'smooth',block:'start'});$('#pcVol').focus({preventScroll:true})});
+
+
+/* pembesian */
+const RB_D=[6,8,10,12,13,16,19,22,25,29,32,36];
+const RB_RULES=[
+ ['Toleransi panjang potong lurus dan ukuran bengkokan: ±25 mm, kecuali perancang menetapkan lain.','PBI 1971 (lama)'],
+ ['Tinggi sengkang ±6 mm (sampai 60 cm) dan ±12 mm (di atas 60 cm). Ukuran luar sengkang, spiral, dan pengikat ±6 mm.','PBI 1971 (lama)'],
+ ['Tulangan bebas dari kotoran, minyak, kerak pabrik lepas, dan karat lepas yang mengurangi lekatan. Karat permukaan ringan masih diizinkan. Tidak boleh ada kerak mengelupas, lipatan, atau retak.','PBI 1971 dan SNI 07-2052-2002 (lama)'],
+ ['Pembengkokan dilakukan dalam keadaan dingin kecuali perancang mengizinkan pemanasan. Besi yang dipanaskan tidak didinginkan dengan air.','PBI 1971 (lama)'],
+ ['Kawat bendrat dari baja lunak teranil tanpa galvanis, diameter minimal 1 mm. Jarak ikatan tidak lebih dari 24 kali diameter tulangan terkecil.','PBI 1971 (lama)'],
+ ['Beton decking (spacer) berkekuatan minimal sama dengan beton yang dicor. Jumlah per luas berbeda antar sumber, ikuti spesifikasi proyek.','PBI 1971 (lama)'],
+ ['Tulangan dipasang agar tidak bergeser saat pengecoran. Selimut beton diperiksa khusus. Tulangan tidak boleh dipotong atau digeser melebihi toleransi untuk memberi jalan pipa atau benda tertanam.','Praktik lapangan'],
+ ['Pembesian adalah hold point: ajukan RFI ke QC dan tunggu persetujuan tertulis sebelum pengecoran.','Alur SiteGuide']];
+let rbN=0;
+function rbRow(d,l,n){
+  const id=++rbN;
+  return `<div class="rbr" data-rb="${id}"><select aria-label="Diameter">${RB_D.map(x=>`<option value="${x}"${x===d?' selected':''}>${x}</option>`).join('')}</select><input type="text" inputmode="decimal" aria-label="Panjang per batang (m)" placeholder="0" value="${l||''}" autocomplete="off"><input type="text" inputmode="numeric" aria-label="Jumlah batang" placeholder="0" value="${n||''}" autocomplete="off"><button type="button" aria-label="Hapus baris" data-rbx="${id}">×</button></div>`;
+}
+const rbPick=name=>prRows().find(r=>r.j.startsWith(name));
+function rbCalc(){
+  let kg=0,m=0,any=false;
+  document.querySelectorAll('#rbRows .rbr').forEach(r=>{
+    const d=+r.querySelector('select').value,[l,n]=[...r.querySelectorAll('input')].map(i=>pcNum(i.value));
+    if(l&&n){any=true;kg+=0.0061654*d*d*l*n;m+=l*n}
+  });
+  const out=$('#rbOut');
+  if(!any){out.textContent='Isi panjang dan jumlah batang.';return}
+  const n1=Math.max(1,Math.floor(pcNum($('#rbR1').value))||1),n2=Math.max(1,Math.floor(pcNum($('#rbR2').value))||1);
+  const f=rbPick('Pabrikasi Besi'),r=rbPick('Pemasangan Besi');
+  const dur=(c,n)=>{const a=Math.ceil(kg/(c.hi*n)),b=Math.ceil(kg/(c.lo*n));return a===b?a:a+' - '+b};
+  let t=`Total panjang: <b>${fnum(Math.round(m*100)/100)} m</b><br>Berat teoritis: <b>${fnum(Math.round(kg*10)/10)} kg</b> (${fnum(Math.round(kg)/1000)} ton)`;
+  if(f)t+=`<br>Pabrikasi, ${n1} regu: <b>${dur(f,n1)} hari kerja</b>`;
+  if(r)t+=`<br>Pemasangan, ${n2} regu: <b>${dur(r,n2)} hari kerja</b>`;
+  out.innerHTML=t;
+}
+function renderRb(){
+  if(!$('#rbRows').children.length)$('#rbRows').innerHTML=rbRow(13,12,0);
+  $('#rbRules').innerHTML=RB_RULES.map(r=>`<div class="prow"><div>${esc(r[0])}<span class="rbs">${esc(r[1])}</span></div></div>`).join('');
+  rbCalc();
+}
+$('#rbRows').addEventListener('input',rbCalc);
+$('#rbRows').addEventListener('click',e=>{const b=e.target.closest('button[data-rbx]');if(!b)return;if($('#rbRows').children.length>1)b.closest('.rbr').remove();rbCalc()});
+$('#rbAdd').addEventListener('click',()=>{$('#rbRows').insertAdjacentHTML('beforeend',rbRow(13,'',''));rbCalc()});
+['rbR1','rbR2'].forEach(id=>$('#'+id).addEventListener('input',rbCalc));
 
 /* routing hash */
 const TABS=['checklist','standar','produksi','ncr','alat','rekap','panduan'];
